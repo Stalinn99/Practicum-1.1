@@ -14,7 +14,7 @@ lazy val root = (project in file("."))
       "org.gnieh"     %% "fs2-data-csv"         % "1.11.1",
       "org.gnieh"     %% "fs2-data-csv-generic" % "1.11.1",
 
-      // JSON (Circe) - Versiones corregidas
+      // JSON (Circe)
       "io.circe" %% "circe-core"    % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser"  % circeVersion
