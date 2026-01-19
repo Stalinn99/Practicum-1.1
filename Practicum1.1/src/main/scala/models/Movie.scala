@@ -1,0 +1,31 @@
+package models
+
+case class Movie(
+                          id: Int,
+                          imdb_id: String = "",
+                          title: String = "",
+                          original_title: String = "",
+                          original_language: String = "",
+                          overview: String = "",
+                          tagline: String = "",
+                          adult: Boolean = false,
+                          video: Boolean = false,
+                          status: String = "",
+                          release_date: String = "",
+                          budget: Double = 0.0,
+                          revenue: Double = 0.0,
+                          runtime: Double = 0.0,
+                          popularity: Double = 0.0,
+                          vote_average: Double = 0.0,
+                          vote_count: Double = 0,
+                          homepage: String = "",
+                          poster_path: String = "",
+                          belongs_to_collection: String = "[]",
+                          genres: String = "[]",
+                          production_companies: String = "[]",
+                          production_countries: String = "[]",
+                          spoken_languages: String = "[]",
+                          keywords: String = "[]",
+                          cast: String = "[]",
+                          crew: String = "[]"
+                )

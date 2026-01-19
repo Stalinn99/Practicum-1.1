@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="Practicum-Circe,Practicum-Circe.main,Practicum-Circe.test" />
+    <profile name="sbt 1" modules="Practicum-Circe,Practicum-Circe.main,Practicum-Circe.test,Practicum1.1,Practicum1.1.main,Practicum1.1.test" />
   </component>
 </project>

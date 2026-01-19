@@ -3,16 +3,45 @@
 Este proyecto realiza un análisis exploratorio y descriptivo sobre un dataset de películas, aplicando principios de programación funcional.
 
 ## 1. Tablas de Datos
-A continuación se describen las columnas principales utilizadas para el análisis numérico y de texto, según el dominio del problema.
 
-| Nombre Columna      | Tipo de Dato | Propósito                                      | Observaciones                                      |
-|---------------------|--------------|------------------------------------------------|----------------------------------------------------|
-| **adult** | Boolean      | Indicar si es contenido para adultos           | Se convierte 'True'/'False' a booleano.            |
-| **revenue** | Double       | Ingresos generados por la película             | Se limpian espacios; vacíos se asumen 0.0.         |
-| **budget** | Double       | Presupuesto de producción                      | Se usa para calcular la desviación estándar.       |
-| **vote_count** | Int          | Cantidad de votos recibidos                    | Entero simple.                                     |
-| **id** | Int          | Identificador único                            | Identificador único de la película.                |
-| **original_language**| String      | Idioma original (código ISO)                   | Usado para conteo y distribución de frecuencia.    |
+#  Dataset de Películas
+
+## Estructura de la Tabla de Datos
+
+| Columna | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| **adult** | Boolean | Indica si la película está dirigida solo hacia adultos. |
+| **belongs_to_collection** | JSON | Información de la colección: Id, Name, Poster_path, Backdrop_path. |
+| **budget** | Double | El presupuesto de la película. |
+| **genres** | JSON | Géneros de la película: id, Name. |
+| **homepage** | String | Enlace a la página oficial del estudio o película. |
+| **id** | Int | Identificador único de la película. |
+| **imdb_id** | String | Identificador único asignado en la base de datos de IMDb. |
+| **original_language** | String | Idioma original de la película. |
+| **original_title** | String | Título original de la película. |
+| **overview** | String | Sinopsis o resumen de la trama. |
+| **popularity** | Double | Índice de popularidad de la película. |
+| **poster_path** | String | Ruta y nombre de la imagen del póster en el servidor de alojamiento. |
+| **production_companies** | JSON | Lista de compañías productoras involucradas (Name, Id). |
+| **production_countries** | JSON | Países de producción o financiación (iso_3166_1, name). |
+| **release_date** | Date | Fecha de lanzamiento oficial de la película. |
+| **revenue** | Double | Ganancia total obtenida por la película. |
+| **runtime** | Double | Duración de la película en minutos. |
+| **spoken_languages** | JSON | Idiomas hablados en el film (iso_639_1, name). |
+| **status** | String | Condición actual de la película (ej. Rumored, Released, Post Production). |
+| **tagline** | String | Slogan o frase publicitaria. |
+| **title** | String | Nombre comercial de la película. |
+| **video** | Boolean | Indica si existe un video promocional o tráiler disponible. |
+| **vote_average** | Double | Promedio de las votaciones recibidas. |
+| **vote_count** | Int | Cantidad total de votos registrados para la película. |
+| **keywords** | JSON | Palabras clave que influyen en el tono y clasificación (id, name). |
+| **cast** | JSON | Reparto de actores y sus personajes (cast_id, character, credit_id, gender, name, profile_path). |
+| **crew** | JSON | Personal detrás de cámaras (name, job, department, id, gender, credit_id). |
+| **rating** | JSON | Detalles de calificación por usuario (userID, rating, timestamp). |
+
+## Observaciones sobre Formatos
+* **Columnas JSON:** Estas columnas contienen estructuras anidadas u objetos que requieren ser decodificados o procesados para extraer sus atributos internos.
+* **Identificadores:** El campo `id` actúa como la clave primaria para la integración de datos entre diferentes tablas o fuentes.
 
 ## 2. Lectura y Limpieza de Datos
 ``` Scala
@@ -134,5 +163,5 @@ val stdDevBudget:Double = math.sqrt(sumSquaredDiff / n)
 ```
 ### Análisis de Texto (Distribución de Frecuencia)
 Se analizó la columna **`original_language`** (excluyendo columnas JSON complejas como *genres* o *cast* para esta etapa).
-* **Metodología:** Agrupamiento (`groupBy`) por idioma y conteo de ocurrencias.
+* **Metodologia:** Agrupamiento (`groupBy`) por idioma y conteo de ocurrencias.
 * **Resultado:** Top 5 de idiomas más frecuentes en el dataset.

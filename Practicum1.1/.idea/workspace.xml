@@ -42,11 +42,13 @@
     "Application.CrewJobProcessor.executor": "Run",
     "Application.CsvJsonProcessor.executor": "Run",
     "Application.GenreCsvProcessor.executor": "Run",
+    "Application.Main.executor": "Run",
     "Application.MovieAnalysis.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "ignore.virus.scanning.warn.message": "true",
     "last_directory_selection": "C:/Users/Lenin/Desktop/TODO/Programacion Funcional y Reactiva/Practicum-Circe/src/main/scala",
+    "last_opened_file_path": "C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0"
@@ -58,49 +60,17 @@
       <recent name="C:\Users\Lenin\Desktop\TODO\Programacion Funcional y Reactiva\Practicum-Circe\src\main\scala\Crew" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MovieAnalysis">
-    <configuration name="Analysis" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Analysis" />
-      <module name="Practicum-Circe.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CountMoviesById" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="CountMoviesById" />
-      <module name="Practicum-Circe.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Crew" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Crew" />
-      <module name="Practicum-Circe.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GenreCsvProcessor" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="GenreCsvProcessor" />
-      <module name="Practicum-Circe.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MovieAnalysis" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="MovieAnalysis" />
-      <module name="Practicum-Circe.main" />
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Practicum1.1.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.MovieAnalysis" />
-        <item itemvalue="Application.CountMoviesById" />
-        <item itemvalue="Application.Analysis" />
-        <item itemvalue="Application.Crew" />
-        <item itemvalue="Application.GenreCsvProcessor" />
+        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
