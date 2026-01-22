@@ -1,7 +1,7 @@
 package models
 
-case class NumEstadistica(
-                           count: Int,
+case class NumEstadisticas(
+                           count: Long,
                            mean: Double,
                            median: Double,
                            stdDev: Double,

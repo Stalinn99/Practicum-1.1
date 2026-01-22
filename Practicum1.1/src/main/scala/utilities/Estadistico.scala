@@ -1,6 +1,6 @@
 package utilities
 
-import models.NumEstadistica
+import models.*
 import scala.math._
 
 object Estadistico {
@@ -8,9 +8,9 @@ object Estadistico {
   /**
    * Calcula estadísticas descriptivas completas para una lista de valores
    */
-  def calculateStats(values: List[Double]): NumEstadistica = {
+  def calculateStats(values: List[Double]): NumEstadisticas = {
     if (values.isEmpty) {
-      return NumEstadistica(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+      return NumEstadisticas(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     }
 
     val sorted = values.sorted
@@ -33,7 +33,7 @@ object Estadistico {
     val q3 = sorted((n * 0.75).toInt)
     val iqr = q3 - q1
 
-    NumEstadistica(
+    NumEstadisticas(
       count = n,
       mean = mean,
       median = median,

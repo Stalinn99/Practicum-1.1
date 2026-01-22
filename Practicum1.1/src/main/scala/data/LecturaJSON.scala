@@ -1,20 +1,46 @@
 package data
 
 import cats.effect.IO
-import fs2.Stream
-import fs2.io.file.Path
-import fs2.data.csv.CsvRow
+import fs2.io.file.{Files, Path}
 import io.circe.Decoder
-import io.circe.generic.auto.*
 import utilities.Parsear_JSON
+import models.*
+import fs2.data.csv.lenient.attemptDecodeUsingHeaders
+import io.circe.generic.auto.deriveDecoder
 
-import javax.swing.JToolBar.Separator
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import scala.util.Try
 
 object LecturaJSON {
 
+
+  case class RatingsStats(
+                           totalRatings: Long,
+                           totalUserIds: Long,
+                           usuariosUnicos: Long,
+                           peliculasConRatings: Long,
+                           promedioRatingsPorPelicula: Double
+                         )
+
+  case class FechaStats(
+                         totalFilas: Long,
+                         fechasValidas: Long,
+                         fechasInvalidas: Long,
+                         ejemplosFechasParseadas: List[(String, String)]
+                       )
+
+  case class AnalisisGeneral(
+                              titulo: String,
+                              totalUnicos: Int,
+                              totalRelaciones: Long,
+                              topItems: List[(String, Int)]
+                            )
+
+
   /**
-   * Analiza un campo JSON en un CSV y cuenta frecuencias
-   * Genérico para cualquier tipo T que tenga un Decoder de Circe
+   * Función base para analizar campos JSON que contienen LISTAS
+   * Ejemplo: genres, crew, cast, keywords, etc.
    */
   def analyzeJsonField[T](
                            filePath: Path,
@@ -23,21 +49,18 @@ object LecturaJSON {
                            separator: Char = ';'
                          )(implicit decoder: Decoder[List[T]]): IO[Map[String, Int]] = {
 
-    LecturaCSV.readCsvRows(filePath, separator)
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
       .map { row =>
-        val jsonRaw = row(fieldName).getOrElse("[]")
+        val jsonRaw = row.getOrElse(fieldName, "[]")
         val parsed = Parsear_JSON.parseJsonField[T](jsonRaw)
-
-        // Contar frecuencias en esta fila
-        parsed.foldLeft(Map.empty[String, Int]) { (acc, item) =>
-          val key = extractKey(item)
-          acc + (key -> (acc.getOrElse(key, 0) + 1))
-        }
+        parsed.groupMapReduce(extractKey)(_ => 1)(_ + _)
       }
-      // Combinar todos los mapas de conteo
-      .fold(Map.empty[String, Int]) { (accMap, rowMap) =>
-        rowMap.foldLeft(accMap) { case (acc, (key, count)) =>
-          acc + (key -> (acc.getOrElse(key, 0) + count))
+      .fold(Map.empty[String, Int]) { (acc, rowMap) =>
+        rowMap.foldLeft(acc) { case (currentAcc, (k, v)) =>
+          currentAcc.updated(k, currentAcc.getOrElse(k, 0) + v)
         }
       }
       .compile
@@ -45,71 +68,162 @@ object LecturaJSON {
   }
 
   /**
-   * Extrae un mapeo de clave -> valor desde un campo JSON
+   * Función base para analizar campos JSON que contienen OBJETOS ÚNICOS
+   * Ejemplo: belongs_to_collection (un solo objeto por película)
    */
-  def extractJsonMapping[T](
-                             filePath: Path,
-                             fieldName: String,
-                             keyField: T => String,
-                             valueField: T => String,
-                             separator: Char = ';'
-                           )(implicit decoder: Decoder[List[T]]): IO[Map[String, String]] = {
+  def analyzeJsonFieldSingle[T](
+                                 filePath: Path,
+                                 fieldName: String,
+                                 extractKey: T => String,
+                                 separator: Char = ';'
+                               )(implicit decoder: Decoder[T]): IO[Map[String, Int]] = {
 
-    LecturaCSV.readCsvRows(filePath, separator)
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
       .map { row =>
-        val jsonRaw = row(fieldName).getOrElse("[]")
-        val parsed = Parsear_JSON.parseJsonField[T](jsonRaw)
-
-        // Crear un mapa de esta fila: p.ej. "en" -> "English"
-        parsed.map(item => keyField(item) -> valueField(item)).toMap
+        val jsonRaw = row.getOrElse(fieldName, "{}")
+        Parsear_JSON.parseJsonFieldSingle[T](jsonRaw) match {
+          case Some(item) => Map(extractKey(item) -> 1)
+          case None => Map.empty[String, Int]
+        }
       }
-      .fold(Map.empty[String, String]) { (accMap, rowMap) =>
-        accMap ++ rowMap // Combina los mapas de todas las filas
+      .fold(Map.empty[String, Int]) { (acc, rowMap) =>
+        if (rowMap.isEmpty) acc
+        else {
+          val (k, v) = rowMap.head
+          acc.updated(k, acc.getOrElse(k, 0) + v)
+        }
       }
       .compile
       .lastOrError
   }
 
-  /**
-   * Versión simplificada para géneros
-   */
-  def analyzeGenres(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Genres
+  // ============= FUNCIONES DE ANÁLISIS ESPECÍFICAS =============
+
+  def analyzeGenres(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Genres](filePath, "genres", _.name, separator)
-  }
 
-  /**
-   * Versión simplificada para crew (por job)
-   */
-  def analyzeCrewByJob(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Crew
+  def analyzeCrewByJob(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Crew](filePath, "crew", _.job, separator)
-  }
 
-  /**
-   * Versión simplificada para crew (por department)
-   */
-  def analyzeCrewByDepartment(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Crew
+  def analyzeCrewByDepartment(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Crew](filePath, "crew", _.department, separator)
-  }
 
-  /**
-   * Versión simplificada para cast (por actor)
-   */
-  def analyzeCastByName(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Cast
+  def analyzeCastByName(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Cast](filePath, "cast", _.name, separator)
-  }
 
-  def analisisKeyWords(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Keywords
+  def analisisKeyWords(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Keywords](filePath, "keywords", _.name, separator)
+
+  def analisisSpokenLenguaje(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
+    analyzeJsonField[Spoken_Languages](filePath, "spoken_languages", _.name, separator)
+
+  def analisisColecciones(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
+    analyzeJsonFieldSingle[BelongToCollection](filePath, "belongs_to_collection", _.name, separator)
+
+  def analisisCompanias(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
+    analyzeJsonField[Production_Companies](filePath, "production_companies", _.name, separator)
+
+  def analisisPaises(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
+    analyzeJsonField[Production_Countries](filePath, "production_countries", _.name, separator)
+
+  // ============= FUNCIONES DE CONTEO Y RATINGS =============
+
+  def contarTotalUserIds(filePath: Path, separator: Char = ';'): IO[Long] = {
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
+      .map { row =>
+        val ratingsJson = row.getOrElse("ratings", "[]")
+        Parsear_JSON.parseJsonField[Ratings](ratingsJson).length.toLong
+      }
+      .compile
+      .fold(0L)(_ + _)
   }
 
-  def analisisSpokenLenguaje(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] = {
-    import models.Spoken_Languages
-    // Esta función cuenta cuántas veces aparece "English", "Spanish", etc.
-    analyzeJsonField[Spoken_Languages](filePath, "spoken_languages", _.name, separator)
+  def contarUsuariosUnicos(filePath: Path, separator: Char = ';'): IO[Long] = {
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
+      .map { row =>
+        val ratingsJson = row.getOrElse("ratings", "[]")
+        Parsear_JSON.parseJsonField[Ratings](ratingsJson).map(_.userId)
+      }
+      .compile
+      .toList
+      .map(_.flatten.distinct.length.toLong)
+  }
+
+  def contarTotalRatings(filePath: Path, separator: Char = ';'): IO[Long] =
+    contarTotalUserIds(filePath, separator)
+
+  // ============= FUNCIONES DE FECHAS =============
+
+  def parsearFechaEstreno(fechaStr: String): Option[String] = {
+    val targetFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+    val formatters = List(
+      DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+      DateTimeFormatter.ofPattern("yyyy/MM/dd"),
+      DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+      DateTimeFormatter.ISO_LOCAL_DATE,
+      DateTimeFormatter.ofPattern("yyyy")
+    )
+
+    if (fechaStr == null || fechaStr.trim.isEmpty || fechaStr.equalsIgnoreCase("null")) return None
+
+    val cleanStr = fechaStr.trim
+
+    formatters.foldLeft[Option[LocalDate]](None) { (result, formatter) =>
+      result.orElse {
+        Try(LocalDate.parse(cleanStr, formatter)).toOption
+          .orElse(if (cleanStr.matches("\\d{4}")) Try(LocalDate.of(cleanStr.toInt, 1, 1)).toOption else None)
+      }
+    }.map(_.format(targetFormatter))
+  }
+
+  def analizarFechasEstreno(filePath: Path, separator: Char = ';'): IO[FechaStats] = {
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
+      .map { row =>
+        val fechaOriginal = row.getOrElse("release_date", "")
+        val fechaParseada = parsearFechaEstreno(fechaOriginal)
+        (fechaOriginal, fechaParseada)
+      }
+      .compile
+      .toList
+      .map { fechas =>
+        val total = fechas.length.toLong
+        val validas = fechas.count(_._2.isDefined).toLong
+        FechaStats(total, validas, total - validas, fechas.collect { case (o, Some(p)) => (o, p) }.take(10))
+      }
+  }
+
+  def analisisRatings(filePath: Path, separator: Char = ';'): IO[RatingsStats] = {
+    for {
+      total <- contarTotalRatings(filePath, separator)
+      unicos <- contarUsuariosUnicos(filePath, separator)
+      peliculasConRatings <- Files[IO].readAll(filePath)
+        .through(fs2.text.utf8.decode)
+        .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+        .collect { case Right(row) => row }
+        .map { row =>
+          val json = row.getOrElse("ratings", "[]")
+          if (json.length > 5 && json != "[]") 1L else 0L
+        }
+        .compile.fold(0L)(_ + _)
+
+    } yield RatingsStats(
+      totalRatings = total,
+      totalUserIds = total,
+      usuariosUnicos = unicos,
+      peliculasConRatings = peliculasConRatings,
+      promedioRatingsPorPelicula = if (peliculasConRatings > 0) total.toDouble / peliculasConRatings else 0.0
+    )
   }
 }

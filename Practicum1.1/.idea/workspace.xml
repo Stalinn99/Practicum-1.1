@@ -19,8 +19,12 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Scala Worksheet" />
+        <option value="Package Object" />
       </list>
     </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -36,6 +40,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Analysis.executor": "Run",
+    "Application.ContadorVotos.executor": "Run",
     "Application.CountMovies.executor": "Run",
     "Application.CountMoviesById.executor": "Run",
     "Application.Crew.executor": "Run",
@@ -60,7 +65,14 @@
       <recent name="C:\Users\Lenin\Desktop\TODO\Programacion Funcional y Reactiva\Practicum-Circe\src\main\scala\Crew" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="ContadorVotos" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="ContadorVotos" />
+      <module name="Practicum1.1.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Practicum1.1.main" />
@@ -71,6 +83,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.ContadorVotos" />
       </list>
     </recent_temporary>
   </component>

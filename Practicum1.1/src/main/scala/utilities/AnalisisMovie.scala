@@ -8,7 +8,6 @@ object AnalisisMovie {
 
   /**
    * Análisis completo de estadísticas numéricas de películas
-   * VERSIÓN MEJORADA: Muestra estadísticas con y sin ceros
    */
   def analyzeMovieStats(movies: List[Movie]): IO[Unit] = {
     if (movies.isEmpty) {
@@ -22,7 +21,7 @@ object AnalisisMovie {
       val runtimeStats = Estadistico.calculateStats(movies.map(_.runtime).filter(_ > 0))
       val voteStats = Estadistico.calculateStats(movies.map(_.vote_average).filter(_ > 0))
 
-      // 🔥 NUEVO: Calcular estadísticas SIN ceros
+      //Calcular estadísticas SIN ceros
       val revenueNonZero = movies.map(_.revenue).filter(_ > 0)
       val budgetNonZero = movies.map(_.budget).filter(_ > 0)
 
@@ -45,23 +44,23 @@ object AnalisisMovie {
       // INGRESOS (Revenue)
         IO.println("\n[1] ESTADÍSTICAS DE INGRESOS (Revenue)") >>
         IO.println("-" * 70) >>
-        IO.println(f"⚠️  Películas con revenue = 0: $revenueZeros%,d (${revenueZeros*100.0/n}%.1f%%)") >>
-        IO.println(f"✅  Películas con revenue > 0: ${revenueNonZero.length}%,d (${revenueNonZero.length*100.0/n}%.1f%%)") >>
-        IO.println("\n📊 TODOS LOS DATOS (incluyendo ceros):") >>
+        IO.println(f" Películas con revenue = 0: $revenueZeros%,d (${revenueZeros*100.0/n}%.1f%%)") >>
+        IO.println(f"  Películas con revenue > 0: ${revenueNonZero.length}%,d (${revenueNonZero.length*100.0/n}%.1f%%)") >>
+        IO.println("\n TODOS LOS DATOS (incluyendo ceros):") >>
         printNumericStats(revenueStats) >>
         (if (revenueNonZero.nonEmpty) {
-          IO.println(f"\n💰 SOLO PELÍCULAS CON INGRESOS REPORTADOS (${revenueNonZero.length}%,d películas):") >>
+          IO.println(f"\nSOLO PELÍCULAS CON INGRESOS REPORTADOS (${revenueNonZero.length}%,d películas):") >>
             printNumericStats(revenueStatsNonZero)
         } else IO.unit) >>
       // PRESUPUESTO (Budget)
         IO.println("\n[2] ESTADÍSTICAS DE PRESUPUESTO (Budget)") >>
         IO.println("-" * 70) >>
-        IO.println(f"⚠️  Películas con budget = 0: $budgetZeros%,d (${budgetZeros*100.0/n}%.1f%%)") >>
-        IO.println(f"✅  Películas con budget > 0: ${budgetNonZero.length}%,d (${budgetNonZero.length*100.0/n}%.1f%%)") >>
-        IO.println("\n📊 TODOS LOS DATOS (incluyendo ceros):") >>
+        IO.println(f"Películas con budget = 0: $budgetZeros%,d (${budgetZeros*100.0/n}%.1f%%)") >>
+        IO.println(f"Películas con budget > 0: ${budgetNonZero.length}%,d (${budgetNonZero.length*100.0/n}%.1f%%)") >>
+        IO.println("\n TODOS LOS DATOS (incluyendo ceros):") >>
         printNumericStats(budgetStats) >>
         (if (budgetNonZero.nonEmpty) {
-          IO.println(f"\n💵 SOLO PELÍCULAS CON PRESUPUESTO REPORTADO (${budgetNonZero.length}%,d películas):") >>
+          IO.println(f"\n SOLO PELÍCULAS CON PRESUPUESTO REPORTADO (${budgetNonZero.length}%,d películas):") >>
             printNumericStats(budgetStatsNonZero)
         } else IO.unit) >>
       // DURACIÓN (Runtime)
@@ -76,7 +75,7 @@ object AnalisisMovie {
       IO.println("\n[5] TOP 5 IDIOMAS MÁS FRECUENTES") >>
         IO.println("-" * 70) >>
         topLanguages.traverse { case (lang, count) =>
-          val percentage = (count.toDouble / n * 100)
+          val percentage = count.toDouble / n * 100
           IO.println(f"  $lang%-10s: $count%5d películas ($percentage%5.2f%%)")
         }.void >>
         IO.println("=" * 70)
@@ -85,7 +84,6 @@ object AnalisisMovie {
 
   /**
    * Análisis bivariable: correlaciones entre variables
-   * VERSIÓN MEJORADA: Muestra cuántos datos se usan
    */
   def analyzeBivariable(movies: List[Movie]): IO[Unit] = {
     if (movies.isEmpty) {
@@ -154,7 +152,7 @@ object AnalisisMovie {
   /**
    * Helper: Imprime estadísticas numéricas formateadas
    */
-  def printNumericStats(stats: NumEstadistica): IO[Unit] = {
+  def printNumericStats(stats: NumEstadisticas): IO[Unit] = {
     IO.println(f"  Conteo:                ${stats.count}%,d") >>
       IO.println(f"  Promedio (Media):      $$${stats.mean}%,.2f") >>
       IO.println(f"  Mediana:               $$${stats.median}%,.2f") >>
