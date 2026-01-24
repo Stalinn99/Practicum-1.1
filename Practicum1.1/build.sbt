@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
       // --- BASE DE DATOS (Añadido Driver de MySQL) ---
       "org.tpolecat"  %% "doobie-core"      % "1.0.0-RC4",
       "org.tpolecat"  %% "doobie-hikari"    % "1.0.0-RC4",
-      "mysql"          % "mysql-connector-java" % "8.0.33", // ¡Indispensable para MySQL!
+      "mysql"          % "mysql-connector-java" % "8.0.33",
 
       // --- JSON (CIRCE) ---
       "io.circe"      %% "circe-core"    % "0.14.6",
