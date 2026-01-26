@@ -17,55 +17,46 @@ object Main extends IOApp.Simple {
   val BATCH_SIZE: Int = 1000
   val SKIP_ANALYSIS: Boolean = false
   val DISABLE_FK_CHECKS: Boolean = true
-  val PRINT_BATCH_TIME: Boolean = true
 
   // ============= PIPELINE OPTIMIZADO =============
 
   def pipelineOptimizado(
-      transactor: doobie.Transactor[IO],
-      rows: List[Map[String, String]]
-  ): IO[Unit] = {
+                          transactor: doobie.Transactor[IO],
+                          rows: List[Map[String, String]]
+                        ): IO[Unit] = {
     for {
       _ <- if (DISABLE_FK_CHECKS)
         sql"SET FOREIGN_KEY_CHECKS=0".update.run.transact(transactor)
       else IO.unit
 
       batches = rows.grouped(BATCH_SIZE).toList
-      _ <- IO.println(s"📦 Total de lotes: ${batches.length}")
+      _ <- IO.println(s"Total de lotes: ${batches.length}")
       _ <- procesarLotes(transactor, batches)
 
       _ <- if (DISABLE_FK_CHECKS)
         sql"SET FOREIGN_KEY_CHECKS=1".update.run.transact(transactor)
       else IO.unit
 
-      _ <- IO.println(" Población de BD completada")
+      _ <- IO.println("Población de BD completada")
     } yield ()
   }
 
   def procesarLotes(
-      transactor: doobie.Transactor[IO],
-      batches: List[List[Map[String, String]]]
-  ): IO[Unit] = {
+                     transactor: doobie.Transactor[IO],
+                     batches: List[List[Map[String, String]]]
+                   ): IO[Unit] = {
     fs2.Stream
       .emits(batches.zipWithIndex)
       .covary[IO]
       .evalMap { case (batch, idx) =>
         for {
-          t0 <- IO.delay(System.nanoTime())
           res <- PoblarBaseDatos.populateBatch(batch).transact(transactor).attempt
-          t1 <- IO.delay(System.nanoTime())
-
           _ <- res match {
             case Left(e) =>
-              IO.println(s" ERROR Batch $idx: ${e.getMessage}")
+              IO.println(s"ERROR Batch $idx: ${e.getMessage}")
             case Right(_) =>
               val porcentaje = (idx + 1) * 100 / batches.length
-              if (PRINT_BATCH_TIME) {
-                IO.println(
-                  s"✓ Batch ${idx + 1}/${batches.length} | " +
-                    s"${batch.size} filas"
-                )
-              } else IO.unit
+              IO.println(s"Batch ${idx + 1}/${batches.length} procesado | ${batch.size} filas | $porcentaje% completado")
           }
         } yield ()
       }
@@ -83,8 +74,8 @@ object Main extends IOApp.Simple {
   }
 
   def analisisfases4a12(
-      rows: List[Map[String, String]]
-  ): IO[Unit] = {
+                         rows: List[Map[String, String]]
+                       ): IO[Unit] = {
     val analisisGeneros = IO {
       rows.flatMap(r => Parsear_JSON.parseJsonField[Genres](r.getOrElse("genres", "[]")))
         .foldLeft(Map.empty[String, Int]) { (acc, g) =>
@@ -146,10 +137,10 @@ object Main extends IOApp.Simple {
   }
 
   def analisisfases13a16(
-      movies: List[Movie],
-      rows: List[Map[String, String]],
-      filePath: Path
-  ): IO[Unit] = {
+                          movies: List[Movie],
+                          rows: List[Map[String, String]],
+                          filePath: Path
+                        ): IO[Unit] = {
     for {
       _ <- IO.println("\n>>> FASE 13: VALIDACIÓN DE IDs")
       count <- IO { rows.count(r => Limpieza.isValidId(r.getOrElse("id", ""))) }
@@ -202,10 +193,10 @@ object Main extends IOApp.Simple {
   }
 
   def mostrarAnalisisJson(
-      titulo: String,
-      ioData: IO[Map[String, Int]],
-      topN: Int = 15
-  ): IO[Unit] = {
+                           titulo: String,
+                           ioData: IO[Map[String, Int]],
+                           topN: Int = 15
+                         ): IO[Unit] = {
     for {
       datos <- ioData.handleErrorWith { _ => IO.pure(Map.empty[String, Int]) }
       _ <-
@@ -263,8 +254,6 @@ object Main extends IOApp.Simple {
         // Luego población BD
         _ <- IO.println("\n>>> FASE 17: POBLACIÓN DE BASE DE DATOS")
         _ <- pipelineOptimizado(transactor, rows)
-
-
 
         _ <- printHeader("PROCESO TERMINADO EXITOSAMENTE")
       } yield ()
