@@ -1,3 +1,28 @@
+error id: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala:DateTimeFormatter.
+file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+empty definition using pc, found symbol in pc: 
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -fs2/data/csv/generic/semiauto/DateTimeFormatter.
+	 -fs2/data/csv/generic/semiauto/DateTimeFormatter#
+	 -fs2/data/csv/generic/semiauto/DateTimeFormatter().
+	 -utilities/CSVDecoder.DateTimeFormatter.
+	 -utilities/CSVDecoder.DateTimeFormatter#
+	 -utilities/CSVDecoder.DateTimeFormatter().
+	 -java/time/format/DateTimeFormatter.
+	 -java/time/format/DateTimeFormatter#
+	 -java/time/format/DateTimeFormatter().
+	 -DateTimeFormatter.
+	 -DateTimeFormatter#
+	 -DateTimeFormatter().
+	 -scala/Predef.DateTimeFormatter.
+	 -scala/Predef.DateTimeFormatter#
+	 -scala/Predef.DateTimeFormatter().
+offset: 287
+uri: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+text:
+```scala
 package data
 
 import cats.effect.IO
@@ -6,6 +31,9 @@ import fs2.data.csv.lenient.attemptDecodeUsingHeaders
 import fs2.data.csv.generic.semiauto.*
 import models.Movie
 import utilities.CSVDecoder.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatt@@er
+import scala.util.Try
 
 object LecturaCSV {
 
@@ -65,3 +93,9 @@ object LecturaCSV {
       .toList
   }
 }
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: 

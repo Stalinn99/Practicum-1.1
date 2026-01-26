@@ -1,3 +1,17 @@
+error id: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala:CSVDecoder.
+file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+empty definition using pc, found symbol in pc: 
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -fs2/data/csv/generic/semiauto/utilities/CSVDecoder.
+	 -utilities/CSVDecoder.utilities.CSVDecoder.
+	 -utilities/CSVDecoder.
+	 -scala/Predef.utilities.CSVDecoder.
+offset: 208
+uri: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+text:
+```scala
 package data
 
 import cats.effect.IO
@@ -5,7 +19,10 @@ import fs2.io.file.{Files, Path}
 import fs2.data.csv.lenient.attemptDecodeUsingHeaders
 import fs2.data.csv.generic.semiauto.*
 import models.Movie
-import utilities.CSVDecoder.*
+import utilities.CS@@VDecoder.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import scala.util.Try
 
 object LecturaCSV {
 
@@ -65,3 +82,9 @@ object LecturaCSV {
       .toList
   }
 }
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: 

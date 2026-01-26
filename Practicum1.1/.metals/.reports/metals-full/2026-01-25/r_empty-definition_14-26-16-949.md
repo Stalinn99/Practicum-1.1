@@ -1,7 +1,21 @@
+error id: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala:io.
+file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+empty definition using pc, found symbol in pc: io.
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -fs2/data/csv/generic/semiauto/fs2/io.
+	 -utilities/CSVDecoder.fs2.io.
+	 -fs2/io.
+	 -scala/Predef.fs2.io.
+offset: 50
+uri: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+text:
+```scala
 package data
 
 import cats.effect.IO
-import fs2.io.file.{Files, Path}
+import fs2.@@io.file.{Files, Path}
 import fs2.data.csv.lenient.attemptDecodeUsingHeaders
 import fs2.data.csv.generic.semiauto.*
 import models.Movie
@@ -65,3 +79,9 @@ object LecturaCSV {
       .toList
   }
 }
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: io.

@@ -1,6 +1,31 @@
+error id: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala:IO.
+file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+empty definition using pc, found symbol in pc: 
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -cats/effect/IO.
+	 -cats/effect/IO#
+	 -cats/effect/IO().
+	 -fs2/data/csv/generic/semiauto/IO.
+	 -fs2/data/csv/generic/semiauto/IO#
+	 -fs2/data/csv/generic/semiauto/IO().
+	 -utilities/CSVDecoder.IO.
+	 -utilities/CSVDecoder.IO#
+	 -utilities/CSVDecoder.IO().
+	 -IO.
+	 -IO#
+	 -IO().
+	 -scala/Predef.IO.
+	 -scala/Predef.IO#
+	 -scala/Predef.IO().
+offset: 35
+uri: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/data/LecturaCSV.scala
+text:
+```scala
 package data
 
-import cats.effect.IO
+import cats.effect.@@IO
 import fs2.io.file.{Files, Path}
 import fs2.data.csv.lenient.attemptDecodeUsingHeaders
 import fs2.data.csv.generic.semiauto.*
@@ -65,3 +90,9 @@ object LecturaCSV {
       .toList
   }
 }
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: 

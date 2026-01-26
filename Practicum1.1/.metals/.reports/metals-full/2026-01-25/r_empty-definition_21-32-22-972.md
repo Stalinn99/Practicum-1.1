@@ -1,3 +1,21 @@
+error id: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/Main.scala:
+file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/Main.scala
+empty definition using pc, found symbol in pc: 
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -cats/implicits/movies.
+	 -models/movies.
+	 -data/movies.
+	 -utilities/movies.
+	 -io/circe/generic/auto/movies.
+	 -doobie/movies.
+	 -movies.
+	 -scala/Predef.movies.
+offset: 8237
+uri: file:///C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/src/main/scala/Main.scala
+text:
+```scala
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import fs2.io.file.Path
@@ -210,7 +228,7 @@ object Main extends IOApp.Simple {
 
         _ <- IO.println("\n>>> FASE 1: CARGA Y LIMPIEZA")
         moviesClean = Limpieza.removeDuplicatesById(movies)
-        _ <- IO.println(s"Filas procesadas: ${movies.length}")
+        _ <- IO.println(s"Filas procesadas: ${@@movies.length}")
         _ <- IO.println(s"Filas con errores: $errors")
         _ <- IO.println(s"Duplicados eliminados: ${movies.length - moviesClean.length}")
         _ <- IO.println(s"Películas finales: ${moviesClean.length}")
@@ -239,3 +257,9 @@ object Main extends IOApp.Simple {
       IO.println(text) >>
       IO.println("=" * 70)
 }
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: 
