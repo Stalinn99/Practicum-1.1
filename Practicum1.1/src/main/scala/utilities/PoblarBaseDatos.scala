@@ -16,10 +16,7 @@ object PoblarBaseDatos {
   def safeInt(s: String): Int = s.trim.toDoubleOption.map(_.toInt).getOrElse(0)
   def safeDouble(s: String): Double = s.trim.toDoubleOption.getOrElse(0.0)
 
-  // =====================================================
-  // VERSIÓN OPTIMIZADA: BATCH INSERT (80-90% más rápido)
-  // =====================================================
-
+  //  BATCH INSERT (80-90% más rápido)
   /** Case class para parámetros de película */
   private case class PeliculaParam(
       idPelicula: Int,
