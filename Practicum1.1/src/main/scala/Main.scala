@@ -13,10 +13,12 @@ object Main extends IOApp.Simple {
 
   val filePath: Path = Path("src/main/resources/data/pi_movies_complete (3).csv")
 
+  // ============= CONFIGURACIÓN =============
   val BATCH_SIZE: Int = 1000
   val SKIP_ANALYSIS: Boolean = false
   val DISABLE_FK_CHECKS: Boolean = true
-  val PRINT_BATCH_TIME: Boolean = true
+
+  // ============= PIPELINE OPTIMIZADO =============
 
   def pipelineOptimizado(
                           transactor: doobie.Transactor[IO],
@@ -48,21 +50,13 @@ object Main extends IOApp.Simple {
       .covary[IO]
       .evalMap { case (batch, idx) =>
         for {
-          t0 <- IO.delay(System.nanoTime())
           res <- PoblarBaseDatos.populateBatch(batch).transact(transactor).attempt
-          t1 <- IO.delay(System.nanoTime())
-
           _ <- res match {
             case Left(e) =>
-              IO.println(s" ERROR Batch $idx: ${e.getMessage}")
+              IO.println(s"ERROR Batch $idx: ${e.getMessage}")
             case Right(_) =>
               val porcentaje = (idx + 1) * 100 / batches.length
-              if (PRINT_BATCH_TIME) {
-                IO.println(
-                  s"Batch ${idx + 1}/${batches.length} | " +
-                    s"${batch.size} filas | "
-                )
-              } else IO.unit
+              IO.println(s"Batch ${idx + 1}/${batches.length} procesado | ${batch.size} filas | $porcentaje% completado")
           }
         } yield ()
       }
@@ -70,16 +64,17 @@ object Main extends IOApp.Simple {
       .drain
   }
 
+  // ============= ANÁLISIS =============
+
   def analisisfase2y3(moviesClean: List[Movie]): IO[Unit] = {
-    IO.println("\n>>> ANÁLISIS UNIVARIABLE") *>
+    IO.println("\n>>> FASE 2: ANÁLISIS UNIVARIABLE") *>
       AnalisisMovie.analyzeMovieStats(moviesClean) *>
-      IO.println("\n>>> ANÁLISIS BIVARIABLE") *>
+      IO.println("\n>>> FASE 3: ANÁLISIS BIVARIABLE") *>
       AnalisisMovie.analyzeBivariable(moviesClean)
   }
 
-  def analisisfases4a16(
-                         rows: List[Map[String, String]],
-                         filePath: Path
+  def analisisfases4a12(
+                         rows: List[Map[String, String]]
                        ): IO[Unit] = {
     val analisisGeneros = IO {
       rows.flatMap(r => Parsear_JSON.parseJsonField[Genres](r.getOrElse("genres", "[]")))
@@ -138,10 +133,39 @@ object Main extends IOApp.Simple {
       _ <- mostrarAnalisisJson("COLECCIONES", analisisColecciones)
       _ <- mostrarAnalisisJson("COMPAÑÍAS PRODUCTORAS", analisisCompanias)
       _ <- mostrarAnalisisJson("PAÍSES PRODUCTORES", analisisPaises)
+    } yield ()
+  }
 
-      _ <- IO.println("\n>>> VALIDACIÓN DE IDs")
+  def analisisfases13a16(
+                          movies: List[Movie],
+                          rows: List[Map[String, String]],
+                          filePath: Path
+                        ): IO[Unit] = {
+    for {
+      _ <- IO.println("\n>>> FASE 13: VALIDACIÓN DE IDs")
       count <- IO { rows.count(r => Limpieza.isValidId(r.getOrElse("id", ""))) }
       _ <- printSection(s"Total de películas con ID válido: $count")
+
+      _ <- IO.println("\n>>> FASE 14: ANÁLISIS DE CAST (ACTORES)")
+      _ <- analizarCast(movies)
+
+      _ <- IO.println("\n>>> FASE 15: ANÁLISIS DE RATINGS")
+      stats <- LecturaJSON.analisisRatings(filePath)
+      _ <- printSection("ANÁLISIS COMPLETO DE RATINGS") >>
+        IO.println(f"Total de ratings: ${stats.totalRatings}%,d") >>
+        IO.println(f"Usuarios únicos: ${stats.usuariosUnicos}%,d") >>
+        IO.println(f"Películas con ratings: ${stats.peliculasConRatings}%,d") >>
+        printSection("")
+
+      _ <- IO.println("\n>>> FASE 16: ANÁLISIS DE FECHAS DE ESTRENO")
+      fechaStats <- LecturaJSON.analizarFechasEstreno(filePath)
+      tasaFechas = if (fechaStats.totalFilas > 0)
+        fechaStats.fechasValidas.toDouble / fechaStats.totalFilas * 100 else 0.0
+      _ <- printSection("ANÁLISIS DE FECHAS DE ESTRENO") >>
+        IO.println(f"Fechas válidas: ${fechaStats.fechasValidas}%,d") >>
+        IO.println(f"Fechas inválidas: ${fechaStats.fechasInvalidas}%,d") >>
+        IO.println(f"Tasa de éxito: $tasaFechas%.2f%%") >>
+        printSection("")
     } yield ()
   }
 
@@ -197,10 +221,12 @@ object Main extends IOApp.Simple {
     } yield ()
   }
 
+  // ============= FUNCIÓN PRINCIPAL =============
+
   def run: IO[Unit] = {
     ConexionDB.xa.use { transactor =>
       for {
-        _ <- printHeader("ANÁLISIS EXPLORATORIO DE DATOS")
+        _ <- printHeader("ANÁLISIS EXPLORATORIO DE DATOS - PELÍCULAS (OPTIMIZADO)")
 
         results <- LecturaCSV.readMoviesFromCsv(filePath)
         movies = results.collect { case Right(m) => m }
@@ -215,9 +241,14 @@ object Main extends IOApp.Simple {
         _ <- IO.println(s"Duplicados eliminados: ${movies.length - moviesClean.length}")
         _ <- IO.println(s"Películas finales: ${moviesClean.length}")
 
+        // Ejecutar análisis primero (secuencial)
         _ <- if (!SKIP_ANALYSIS) {
           analisisfase2y3(moviesClean) *>
-            analisisfases4a16(rows, filePath)
+            analisisfases4a12(rows)
+        } else IO.unit
+        // Finalmente análisis finales (13-16)
+        _ <- if (!SKIP_ANALYSIS) {
+          analisisfases13a16(moviesClean, rows, filePath)
         } else IO.unit
 
         // Luego población BD
@@ -228,6 +259,8 @@ object Main extends IOApp.Simple {
       } yield ()
     }
   }
+
+  // ============= UTILIDADES =============
 
   def printHeader(text: String): IO[Unit] =
     IO.println("\n" + "=" * 70) >>

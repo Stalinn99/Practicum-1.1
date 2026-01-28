@@ -16,6 +16,8 @@ object PoblarBaseDatos {
   def safeInt(s: String): Int = s.trim.toDoubleOption.map(_.toInt).getOrElse(0)
   def safeDouble(s: String): Double = s.trim.toDoubleOption.getOrElse(0.0)
 
+  //  BATCH INSERT
+  /** Case class para parámetros de película */
   private case class PeliculaParam(
                                     idPelicula: Int,
                                     imdb_id: String,
@@ -69,6 +71,13 @@ object PoblarBaseDatos {
       )
     }
   }
+
+  /**
+   * Inserta un lote completo
+   * Usa batch inserts para tablas principales
+   * @param rows Lista de filas del CSV a procesar
+   * @return ConnectionIO que realiza todas las inserciones en una transacción
+   */
   def populateBatch(rows: List[Map[String, String]]): ConnectionIO[Unit] = {
     val peliculas = rows.flatMap(buildPeliculaParam)
 
@@ -119,11 +128,12 @@ object PoblarBaseDatos {
     val insertPelGen = Update[(Int, Int)](insertPelGenSql).updateMany(pelGenTuples)
 
     for {
-      // Batch inserts de películas y géneros (optimizados)
+      // Batch inserts de películas y géneros
       _ <- if (peliTuples.nonEmpty) insertPel.void else FC.unit
       _ <- if (generoTuples.nonEmpty) insertGen.void else FC.unit
       _ <- if (pelGenTuples.nonEmpty) insertPelGen.void else FC.unit
 
+      // Para el resto de relaciones procesamos por fila
       _ <- rows.traverse_ { row =>
         val keywords = parseJsonField[Keywords](row.getOrElse("keywords", "[]"))
         val companies = parseJsonField[Production_Companies](row.getOrElse("production_companies", "[]"))

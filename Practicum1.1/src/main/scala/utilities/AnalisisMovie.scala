@@ -13,28 +13,28 @@ object AnalisisMovie {
     if (movies.isEmpty) {
       IO.println("ERROR: No hay datos para analizar")
     } else {
-      val n = movies.length
+      val n: Int = movies.length
 
       // Calcular estadísticas INCLUYENDO ceros
-      val revenueStats = Estadistico.calculateStats(movies.map(_.revenue))
-      val budgetStats = Estadistico.calculateStats(movies.map(_.budget))
-      val runtimeStats = Estadistico.calculateStats(movies.map(_.runtime).filter(_ > 0))
-      val voteStats = Estadistico.calculateStats(movies.map(_.vote_average).filter(_ > 0))
+      val revenueStats: NumEstadisticas = Estadistico.calculateStats(movies.map(_.revenue))
+      val budgetStats: NumEstadisticas = Estadistico.calculateStats(movies.map(_.budget))
+      val runtimeStats: NumEstadisticas = Estadistico.calculateStats(movies.map(_.runtime).filter(_ > 0))
+      val voteStats: NumEstadisticas = Estadistico.calculateStats(movies.map(_.vote_average).filter(_ > 0))
 
       //Calcular estadísticas SIN ceros
-      val revenueNonZero = movies.map(_.revenue).filter(_ > 0)
-      val budgetNonZero = movies.map(_.budget).filter(_ > 0)
+      val revenueNonZero: List[Double] = movies.map(_.revenue).filter(_ > 0)
+      val budgetNonZero: List[Double] = movies.map(_.budget).filter(_ > 0)
 
-      val revenueStatsNonZero = Estadistico.calculateStats(revenueNonZero)
-      val budgetStatsNonZero = Estadistico.calculateStats(budgetNonZero)
+      val revenueStatsNonZero: NumEstadisticas = Estadistico.calculateStats(revenueNonZero)
+      val budgetStatsNonZero: NumEstadisticas = Estadistico.calculateStats(budgetNonZero)
 
       // Contar películas con valores en 0
-      val revenueZeros = movies.count(_.revenue == 0.0)
-      val budgetZeros = movies.count(_.budget == 0.0)
+      val revenueZeros: Int = movies.count(_.revenue == 0.0)
+      val budgetZeros: Int = movies.count(_.budget == 0.0)
 
       // Análisis de idiomas
-      val languageFreq = Estadistico.calculateFrequency(movies.map(_.original_language))
-      val topLanguages = Estadistico.topN(languageFreq, 5)
+      val languageFreq: Map[String, Int] = Estadistico.calculateFrequency(movies.map(_.original_language))
+      val topLanguages: List[(String, Int)] = Estadistico.topN(languageFreq, 5)
 
       // Imprimir resultados
       IO.println("=" * 70) >>
@@ -75,7 +75,7 @@ object AnalisisMovie {
       IO.println("\n[5] TOP 5 IDIOMAS MÁS FRECUENTES") >>
         IO.println("-" * 70) >>
         topLanguages.traverse { case (lang, count) =>
-          val percentage = count.toDouble / n * 100
+          val percentage: Double = count.toDouble / n * 100
           IO.println(f"  $lang%-10s: $count%5d películas ($percentage%5.2f%%)")
         }.void >>
         IO.println("=" * 70)
@@ -90,27 +90,27 @@ object AnalisisMovie {
       IO.println("ERROR: No hay datos para analizar")
     } else {
       // Filtrar películas con datos completos
-      val validMovies = movies.filter(m =>
+      val validMovies: List[Movie] = movies.filter(m =>
         m.budget > 0 && m.revenue > 0 && m.vote_average > 0
       )
 
-      val totalMovies = movies.length
-      val validCount = validMovies.length
-      val invalidCount = totalMovies - validCount
+      val totalMovies : Int = movies.length
+      val validCount: Int = validMovies.length
+      val invalidCount: Int = totalMovies - validCount
 
       if (validMovies.length < 2) {
         IO.println("ERROR: No hay suficientes datos válidos para análisis bivariable")
       } else {
-        val budgets = validMovies.map(_.budget)
-        val revenues = validMovies.map(_.revenue)
-        val votes = validMovies.map(_.vote_average)
-        val popularity = validMovies.map(_.popularity)
+        val budgets: List[Double] = validMovies.map(_.budget)
+        val revenues: List[Double] = validMovies.map(_.revenue)
+        val votes: List[Double] = validMovies.map(_.vote_average)
+        val popularity: List[Double] = validMovies.map(_.popularity)
 
         // Calcular correlaciones
-        val corrBudgetRevenue = Estadistico.pearsonCorrelation(budgets, revenues)
-        val corrBudgetVote = Estadistico.pearsonCorrelation(budgets, votes)
-        val corrRevenueVote = Estadistico.pearsonCorrelation(revenues, votes)
-        val corrVotePopularity = Estadistico.pearsonCorrelation(votes, popularity)
+        val corrBudgetRevenue: Double = Estadistico.pearsonCorrelation(budgets, revenues)
+        val corrBudgetVote: Double = Estadistico.pearsonCorrelation(budgets, votes)
+        val corrRevenueVote: Double = Estadistico.pearsonCorrelation(revenues, votes)
+        val corrVotePopularity: Double = Estadistico.pearsonCorrelation(votes, popularity)
 
         IO.println("\n" + "=" * 70) >>
           IO.println("ANÁLISIS BIVARIABLE - CORRELACIONES") >>
@@ -139,13 +139,13 @@ object AnalisisMovie {
    * Helper: Interpreta el valor de correlación
    */
   def interpretCorrelation(r: Double): String = {
-    val absR = math.abs(r)
-    val strength = if (absR >= 0.7) "Fuerte"
+    val absR: Double = math.abs(r)
+    val strength: String = if (absR >= 0.7) "Fuerte"
     else if (absR >= 0.4) "Moderada"
     else if (absR >= 0.2) "Débil"
     else "Muy débil/Ninguna"
 
-    val direction = if (r > 0) "positiva" else if (r < 0) "negativa" else "sin dirección"
+    val direction: String = if (r > 0) "positiva" else if (r < 0) "negativa" else "sin dirección"
     s"($strength $direction)"
   }
 

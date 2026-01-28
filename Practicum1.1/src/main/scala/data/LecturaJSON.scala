@@ -54,8 +54,8 @@ object LecturaJSON {
       .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
       .collect { case Right(row) => row }
       .map { row =>
-        val jsonRaw = row.getOrElse(fieldName, "[]")
-        val parsed = Parsear_JSON.parseJsonField[T](jsonRaw)
+        val jsonRaw: String = row.getOrElse(fieldName, "[]")
+        val parsed: List[T] = Parsear_JSON.parseJsonField[T](jsonRaw)
         parsed.groupMapReduce(extractKey)(_ => 1)(_ + _)
       }
       .fold(Map.empty[String, Int]) { (acc, rowMap) =>
@@ -83,7 +83,7 @@ object LecturaJSON {
       .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
       .collect { case Right(row) => row }
       .map { row =>
-        val jsonRaw = row.getOrElse(fieldName, "{}")
+        val jsonRaw: String = row.getOrElse(fieldName, "{}")
         Parsear_JSON.parseJsonFieldSingle[T](jsonRaw) match {
           case Some(item) => Map(extractKey(item) -> 1)
           case None => Map.empty[String, Int]
@@ -137,7 +137,7 @@ object LecturaJSON {
       .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
       .collect { case Right(row) => row }
       .map { row =>
-        val ratingsJson = row.getOrElse("ratings", "[]")
+        val ratingsJson: String = row.getOrElse("ratings", "[]")
         Parsear_JSON.parseJsonField[Ratings](ratingsJson).length.toLong
       }
       .compile
@@ -150,7 +150,7 @@ object LecturaJSON {
       .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
       .collect { case Right(row) => row }
       .map { row =>
-        val ratingsJson = row.getOrElse("ratings", "[]")
+        val ratingsJson: String = row.getOrElse("ratings", "[]")
         Parsear_JSON.parseJsonField[Ratings](ratingsJson).map(_.userId)
       }
       .compile
@@ -164,8 +164,8 @@ object LecturaJSON {
   // ============= FUNCIONES DE FECHAS =============
 
   def parsearFechaEstreno(fechaStr: String): Option[String] = {
-    val targetFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-    val formatters = List(
+    val targetFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+    val formatters: List[DateTimeFormatter] = List(
       DateTimeFormatter.ofPattern("yyyy-MM-dd"),
       DateTimeFormatter.ofPattern("yyyy/MM/dd"),
       DateTimeFormatter.ofPattern("dd/MM/yyyy"),
@@ -175,7 +175,7 @@ object LecturaJSON {
 
     if (fechaStr == null || fechaStr.trim.isEmpty || fechaStr.equalsIgnoreCase("null")) return None
 
-    val cleanStr = fechaStr.trim
+    val cleanStr: String = fechaStr.trim
 
     formatters.foldLeft[Option[LocalDate]](None) { (result, formatter) =>
       result.orElse {
@@ -191,15 +191,15 @@ object LecturaJSON {
       .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
       .collect { case Right(row) => row }
       .map { row =>
-        val fechaOriginal = row.getOrElse("release_date", "")
-        val fechaParseada = parsearFechaEstreno(fechaOriginal)
+        val fechaOriginal: String = row.getOrElse("release_date", "")
+        val fechaParseada: Option[String] = parsearFechaEstreno(fechaOriginal)
         (fechaOriginal, fechaParseada)
       }
       .compile
       .toList
-      .map { fechas =>
-        val total = fechas.length.toLong
-        val validas = fechas.count(_._2.isDefined).toLong
+        .map { fechas =>
+        val total: Long = fechas.length.toLong
+        val validas: Long = fechas.count(_._2.isDefined).toLong
         FechaStats(total, validas, total - validas, fechas.collect { case (o, Some(p)) => (o, p) }.take(10))
       }
   }
@@ -213,7 +213,7 @@ object LecturaJSON {
         .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
         .collect { case Right(row) => row }
         .map { row =>
-          val json = row.getOrElse("ratings", "[]")
+          val json: String = row.getOrElse("ratings", "[]")
           if (json.length > 5 && json != "[]") 1L else 0L
         }
         .compile.fold(0L)(_ + _)

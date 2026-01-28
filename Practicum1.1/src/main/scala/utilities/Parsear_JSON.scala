@@ -13,7 +13,7 @@ object Parsear_JSON {
    */
   def cleanJsonString(raw: String): String = {
     if (raw == null) return "[]"
-    val trimmed = raw.trim
+    val trimmed: String = raw.trim
     if (trimmed.isEmpty || trimmed == "null" || trimmed.equalsIgnoreCase("nan")) return "[]"
 
     trimmed
@@ -29,7 +29,7 @@ object Parsear_JSON {
    * Parsea una lista de objetos JSON.
    */
   def parseJsonField[T](rawJson: String)(implicit decoder: Decoder[List[T]]): List[T] = {
-    val jsonLimpio = cleanJsonString(rawJson)
+    val jsonLimpio: String = cleanJsonString(rawJson)
     if (jsonLimpio == "[]") return List.empty
 
     decode[List[T]](jsonLimpio).getOrElse(List.empty)
@@ -39,7 +39,7 @@ object Parsear_JSON {
    * Parsea un OBJETO JSON único (para belongs_to_collection).
    */
   def parseJsonFieldSingle[T](rawJson: String)(implicit decoder: Decoder[T]): Option[T] = {
-    val jsonLimpio = cleanJsonString(rawJson)
+    val jsonLimpio: String = cleanJsonString(rawJson)
     if (jsonLimpio == "[]" || jsonLimpio == "{}") return None
 
     // Si es una colección vacía de Python "{}" o string vacío
@@ -52,7 +52,7 @@ object Parsear_JSON {
    * Versión segura que devuelve Either.
    */
   def parseJsonFieldSafe[T](rawJson: String)(implicit decoder: Decoder[List[T]]): Either[String, List[T]] = {
-    val jsonLimpio = cleanJsonString(rawJson)
+    val jsonLimpio: String = cleanJsonString(rawJson)
     if (jsonLimpio == "[]") return Right(List.empty)
 
     decode[List[T]](jsonLimpio).leftMap(_.getMessage)

@@ -1,6 +1,6 @@
 package utilities
 
-import models.*
+import models.NumEstadisticas
 import scala.math._
 
 object Estadistico {
@@ -13,25 +13,25 @@ object Estadistico {
       return NumEstadisticas(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     }
 
-    val sorted = values.sorted
-    val n = values.length
-    val mean = values.sum / n.toDouble
+    val sorted: List[Double] = values.sorted
+    val n : Int = values.length
+    val mean : Double = values.sum / n.toDouble
 
     // Mediana
-    val median = if (n % 2 == 0) {
+    val median: Double = if (n % 2 == 0) {
       (sorted(n / 2 - 1) + sorted(n / 2)) / 2.0
     } else {
       sorted(n / 2)
     }
 
     // Desviación estándar
-    val variance = values.map(v => pow(v - mean, 2)).sum / n
-    val stdDev = sqrt(variance)
+    val variance: Double = values.map(v => pow(v - mean, 2)).sum / n
+    val stdDev: Double = sqrt(variance)
 
     // Cuartiles
-    val q1 = sorted((n * 0.25).toInt)
-    val q3 = sorted((n * 0.75).toInt)
-    val iqr = q3 - q1
+    val q1: Double = sorted((n * 0.25).toInt)
+    val q3: Double = sorted((n * 0.75).toInt)
+    val iqr: Double = q3 - q1
 
     NumEstadisticas(
       count = n,
@@ -64,9 +64,9 @@ object Estadistico {
    * Detecta outliers usando el método IQR
    */
   def detectOutliers(values: List[Double], multiplier: Double = 1.5): List[Double] = {
-    val stats = calculateStats(values)
-    val lowerBound = stats.q1 - (multiplier * stats.iqr)
-    val upperBound = stats.q3 + (multiplier * stats.iqr)
+    val stats: NumEstadisticas = calculateStats(values)
+    val lowerBound: Double = stats.q1 - (multiplier * stats.iqr)
+    val upperBound: Double = stats.q3 + (multiplier * stats.iqr)
 
     values.filter(v => v < lowerBound || v > upperBound)
   }
@@ -77,16 +77,16 @@ object Estadistico {
   def pearsonCorrelation(x: List[Double], y: List[Double]): Double = {
     require(x.length == y.length && x.nonEmpty, "Las listas deben tener la misma longitud y no estar vacías")
 
-    val n = x.length
-    val meanX = x.sum / n
-    val meanY = y.sum / n
+    val n : Int= x.length
+    val meanX : Double = x.sum / n
+    val meanY : Double = y.sum / n
 
-    val numerator = x.zip(y).map { case (xi, yi) =>
+    val numerator: Double = x.zip(y).map { case (xi, yi) =>
       (xi - meanX) * (yi - meanY)
     }.sum
 
-    val denomX = sqrt(x.map(xi => pow(xi - meanX, 2)).sum)
-    val denomY = sqrt(y.map(yi => pow(yi - meanY, 2)).sum)
+    val denomX : Double = sqrt(x.map(xi => pow(xi - meanX, 2)).sum)
+    val denomY : Double = sqrt(y.map(yi => pow(yi - meanY, 2)).sum)
 
     if (denomX == 0.0 || denomY == 0.0) 0.0
     else numerator / (denomX * denomY)

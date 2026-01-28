@@ -44,10 +44,10 @@ object Limpieza {
   def removeOutliers(values: List[Double], lowerPercentile: Double = 0.01, upperPercentile: Double = 0.99): List[Double] = {
     if (values.isEmpty) return List.empty
 
-    val sorted = values.sorted
-    val n = sorted.length
-    val lowerIndex = (n * lowerPercentile).toInt
-    val upperIndex = (n * upperPercentile).toInt
+    val sorted: List[Double] = values.sorted
+    val n: Int = sorted.length
+    val lowerIndex: Int = (n * lowerPercentile).toInt
+    val upperIndex: Int = (n * upperPercentile).toInt
 
     sorted.slice(lowerIndex, upperIndex)
   }
