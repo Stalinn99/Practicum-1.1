@@ -3247,3 +3247,75 @@ ene 28, 2026 4:33:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCance
 WARNING: Unmatched cancel notification for request id 21
 2026.01.28 16:33:53 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\LecturaJSON.scala. Using presentation compiler with project's scala-library version: 3.3.7
 2026.01.28 16:33:53 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\LecturaJSON.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:33:56 INFO  running 'C:\Users\Lenin\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin\java.exe -Djline.terminal=jline.UnsupportedTerminal -Dsbt.log.noformat=true -Dfile.encoding=UTF-8 -jar C:\Users\Lenin\AppData\Local\Temp\metals18269281927267266921\sbt-launch.jar -Dbloop.export-jar-classifiers=sources bloopInstall'
+2026.01.28 16:33:56 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\project\metals.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:33:56 WARN  no build target for: C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\metals.sbt
+2026.01.28 16:33:56 WARN  no build target for: C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\project\metals.sbt
+2026.01.28 16:33:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\metals.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:02 INFO  [info] welcome to sbt 1.11.7 (Eclipse Adoptium Java 21.0.9)
+2026.01.28 16:34:03 INFO  [info] loading global plugins from C:\Users\Lenin\.sbt\1.0\plugins
+2026.01.28 16:34:06 INFO  [info] loading settings for project practicum1-1-build-build from metals.sbt...
+2026.01.28 16:34:06 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\LecturaJSON.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:06 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:06 INFO  [info] loading project definition from C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\project
+2026.01.28 16:34:06 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:07 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:07 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:07 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:08 INFO  [info] loading settings for project practicum1-1-build from metals.sbt...
+2026.01.28 16:34:08 INFO  [info] loading project definition from C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project
+2026.01.28 16:34:09 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:10 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:10 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:10 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:11 INFO  [success] Generated .bloop\practicum1-1-build.json
+2026.01.28 16:34:11 INFO  [success] Total time: 3 s, completed 28 ene 2026 16:34:11
+2026.01.28 16:34:12 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:12 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:12 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:12 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:13 INFO  [info] loading settings for project root from build.sbt...
+2026.01.28 16:34:13 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:13 INFO  [info] set current project to Practicum1.1 (in build file:/C:/Users/Lenin/Desktop/Practicum-1.1/Practicum1.1/)
+2026.01.28 16:34:13 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:14 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:14 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:15 INFO  [success] Generated .bloop\root.json
+2026.01.28 16:34:15 INFO  [success] Generated .bloop\root-test.json
+2026.01.28 16:34:15 INFO  [success] Total time: 2 s, completed 28 ene 2026 16:34:15
+2026.01.28 16:34:15 INFO  time: ran 'sbt bloopInstall' in 19s
+2026.01.28 16:34:15 INFO  Attempting to connect to the build server...
+2026.01.28 16:34:15 INFO  No running Bloop server found, starting one.
+2026.01.28 16:34:15 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:16 INFO  Starting compilation server
+2026.01.28 16:34:15 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:15 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:17 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.28 16:34:17 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:17 INFO  Attempting to connect to the build server...
+2026.01.28 16:34:17 INFO  Found a Bloop server running
+2026.01.28 16:34:17 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.28 16:34:17 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\build.sbt. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.28 16:34:17 INFO  time: Connected to build server in 2.4s
+2026.01.28 16:34:17 INFO  Connected to Build server: Bloop v2.0.18
+2026.01.28 16:34:18 INFO  time: Imported build in 0.13s
+2026.01.28 16:34:18 WARN  3.3.3 is no longer supported in the current Metals versions, using the last known supported version 1.5.1
+ene 28, 2026 4:34:18 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 52
+2026.01.28 16:34:23 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026.01.28 16:34:29 INFO  time: indexed workspace in 11s
+2026.01.28 16:34:30 INFO  compiling root (21 scala sources)
+2026.01.28 16:34:46 INFO  time: compiled root in 16s
+2026.01.28 16:35:32 INFO  compiling root (1 scala source)
+Exception in thread "pool-18-thread-1" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2026.01.28 16:35:37 INFO  time: compiled root in 4.88s
+ene 28, 2026 4:36:08 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 255
+2026.01.28 16:36:29 INFO  compiling root (1 scala source)
+2026.01.28 16:36:36 INFO  time: compiled root in 7.19s
