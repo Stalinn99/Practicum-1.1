@@ -14,7 +14,7 @@ object Main extends IOApp.Simple {
   val filePath: Path = Path("src/main/resources/data/pi_movies_complete (3).csv")
 
   // ============= CONFIGURACIÓN =============
-  val BATCH_SIZE: Int = 1000
+  val BATCH_SIZE: Int = 1160
   val SKIP_ANALYSIS: Boolean = false
   val DISABLE_FK_CHECKS: Boolean = true
 
@@ -29,7 +29,7 @@ object Main extends IOApp.Simple {
         sql"SET FOREIGN_KEY_CHECKS=0".update.run.transact(transactor)
       else IO.unit
 
-      batches = rows.grouped(BATCH_SIZE).toList
+      batches: List[List[Map[String, String]]] = rows.grouped(BATCH_SIZE).toList
       _ <- IO.println(s"Total de lotes: ${batches.length}")
       _ <- procesarLotes(transactor, batches)
 
@@ -55,7 +55,7 @@ object Main extends IOApp.Simple {
             case Left(e) =>
               IO.println(s"ERROR Batch $idx: ${e.getMessage}")
             case Right(_) =>
-              val porcentaje = (idx + 1) * 100 / batches.length
+              val porcentaje:Double = (idx + 1) * 100 / batches.length
               IO.println(s"Batch ${idx + 1}/${batches.length} procesado | ${batch.size} filas | $porcentaje% completado")
           }
         } yield ()
@@ -73,66 +73,30 @@ object Main extends IOApp.Simple {
       AnalisisMovie.analyzeBivariable(moviesClean)
   }
 
-  def analisisfases4a12(
-                         rows: List[Map[String, String]]
-                       ): IO[Unit] = {
-    val analisisGeneros = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Genres](r.getOrElse("genres", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, g) =>
-          acc.updated(g.name, acc.getOrElse(g.name, 0) + 1)
-        }
-    }
-
-    val analisisRoles = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Crew](r.getOrElse("crew", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, c) =>
-          acc.updated(c.job, acc.getOrElse(c.job, 0) + 1)
-        }
-    }
-
-    val analisisKeywords = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Keywords](r.getOrElse("keywords", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, k) =>
-          acc.updated(k.name, acc.getOrElse(k.name, 0) + 1)
-        }
-    }
-
-    val analisisIdiomas = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Spoken_Languages](r.getOrElse("spoken_languages", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, l) =>
-          acc.updated(l.name, acc.getOrElse(l.name, 0) + 1)
-        }
-    }
-
-    val analisisColecciones = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonFieldSingle[BelongToCollection](r.getOrElse("belongs_to_collection", "{}")).toList)
-        .foldLeft(Map.empty[String, Int]) { (acc, c) =>
-          acc.updated(c.name, acc.getOrElse(c.name, 0) + 1)
-        }
-    }
-
-    val analisisCompanias = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Production_Companies](r.getOrElse("production_companies", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, c) =>
-          acc.updated(c.name, acc.getOrElse(c.name, 0) + 1)
-        }
-    }
-
-    val analisisPaises = IO {
-      rows.flatMap(r => Parsear_JSON.parseJsonField[Production_Countries](r.getOrElse("production_countries", "[]")))
-        .foldLeft(Map.empty[String, Int]) { (acc, p) =>
-          acc.updated(p.name, acc.getOrElse(p.name, 0) + 1)
-        }
-    }
-
+  // ============ Usa funciones de LecturaJSON =============
+  def analisisfases4a12(): IO[Unit] = {
     for {
-      _ <- mostrarAnalisisJson("GÉNEROS", analisisGeneros)
-      _ <- mostrarAnalisisJson("ROLES EN PRODUCCIÓN", analisisRoles)
-      _ <- mostrarAnalisisJson("PALABRAS CLAVE", analisisKeywords)
-      _ <- mostrarAnalisisJson("IDIOMAS HABLADOS", analisisIdiomas)
-      _ <- mostrarAnalisisJson("COLECCIONES", analisisColecciones)
-      _ <- mostrarAnalisisJson("COMPAÑÍAS PRODUCTORAS", analisisCompanias)
-      _ <- mostrarAnalisisJson("PAÍSES PRODUCTORES", analisisPaises)
+      // Usar las funciones de LecturaJSON en lugar de código duplicado
+      analisisGeneros <- LecturaJSON.analyzeGenres(filePath)
+      _ <- mostrarAnalisisJson("GÉNEROS", IO.pure(analisisGeneros))
+
+      analisisRoles <- LecturaJSON.analyzeCrewByJob(filePath)
+      _ <- mostrarAnalisisJson("ROLES EN PRODUCCIÓN", IO.pure(analisisRoles))
+
+      analisisKeywords <- LecturaJSON.analisisKeyWords(filePath)
+      _ <- mostrarAnalisisJson("PALABRAS CLAVE", IO.pure(analisisKeywords))
+
+      analisisIdiomas <- LecturaJSON.analisisSpokenLenguaje(filePath)
+      _ <- mostrarAnalisisJson("IDIOMAS HABLADOS", IO.pure(analisisIdiomas))
+
+      analisisColecciones <- LecturaJSON.analisisColecciones(filePath)
+      _ <- mostrarAnalisisJson("COLECCIONES", IO.pure(analisisColecciones))
+
+      analisisCompanias <- LecturaJSON.analisisCompanias(filePath)
+      _ <- mostrarAnalisisJson("COMPAÑÍAS PRODUCTORAS", IO.pure(analisisCompanias))
+
+      analisisPaises <- LecturaJSON.analisisPaises(filePath)
+      _ <- mostrarAnalisisJson("PAÍSES PRODUCTORES", IO.pure(analisisPaises))
     } yield ()
   }
 
@@ -244,8 +208,9 @@ object Main extends IOApp.Simple {
         // Ejecutar análisis primero (secuencial)
         _ <- if (!SKIP_ANALYSIS) {
           analisisfase2y3(moviesClean) *>
-            analisisfases4a12(rows)
+            analisisfases4a12()  // ← AHORA USA LecturaJSON
         } else IO.unit
+
         // Finalmente análisis finales (13-16)
         _ <- if (!SKIP_ANALYSIS) {
           analisisfases13a16(moviesClean, rows, filePath)

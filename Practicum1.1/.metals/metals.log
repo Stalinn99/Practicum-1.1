@@ -3319,3 +3319,44 @@ ene 28, 2026 4:36:08 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCance
 WARNING: Unmatched cancel notification for request id 255
 2026.01.28 16:36:29 INFO  compiling root (1 scala source)
 2026.01.28 16:36:36 INFO  time: compiled root in 7.19s
+2026.01.28 16:37:22 INFO  compiling root (2 scala sources)
+2026.01.28 16:37:23 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:25 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:25 INFO  time: compiled root in 3.23s
+2026.01.28 16:37:25 INFO  compiling root (2 scala sources)
+2026.01.28 16:37:26 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:28 INFO  time: compiled root in 2.13s
+2026.01.28 16:37:28 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:34 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:35 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:35 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:35 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:35 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:36 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:36 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:41 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:45 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:49 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 16:37:50 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:50 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:52 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:57 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:37:58 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 16:37:59 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 16:38:07 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 16:38:08 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 16:38:10 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:13 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:15 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:20 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:24 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:24 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:25 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:28 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:29 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:30 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:32 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:37 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:37 INFO  compiling root (2 scala sources)
+2026.01.28 16:38:37 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 16:38:45 INFO  time: compiled root in 7.78s
