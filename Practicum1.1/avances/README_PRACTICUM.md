@@ -614,6 +614,37 @@ Ejemplo: Si la película es de "Acción" y "Comedia", genera: Map("Action" -> 1,
 `.lastOrError`: Como el proceso de fold termina entregando un único resultado (el Mapa final con todos los conteos del archivo), esta línea extrae ese resultado si por alguna razón el flujo no produjo nada (archivo vacío), lanza una excepción.
 
 ```scala
+def analyzeJsonFieldSingle[T](
+                                 filePath: Path,
+                                 fieldName: String,
+                                 extractKey: T => String,
+                                 separator: Char = ';'
+                               )(implicit decoder: Decoder[T]): IO[Map[String, Int]] = {
+
+    Files[IO].readAll(filePath)
+      .through(fs2.text.utf8.decode)
+      .through(attemptDecodeUsingHeaders[Map[String, String]](separator = separator))
+      .collect { case Right(row) => row }
+      .map { row =>
+        val jsonRaw: String = row.getOrElse(fieldName, "{}")
+        Parsear_JSON.parseJsonFieldSingle[T](jsonRaw) match {
+          case Some(item) => Map(extractKey(item) -> 1)
+          case None => Map.empty[String, Int]
+        }
+      }
+      .fold(Map.empty[String, Int]) { (acc, rowMap) =>
+        if (rowMap.isEmpty) acc
+        else {
+          val (k, v) = rowMap.head
+          acc.updated(k, acc.getOrElse(k, 0) + v)
+        }
+      }
+      .compile
+      .lastOrError
+  }
+```
+
+```scala
   def analyzeGenres(filePath: Path, separator: Char = ';'): IO[Map[String, Int]] =
     analyzeJsonField[Genres](filePath, "genres", _.name, separator)
 
@@ -1428,9 +1459,6 @@ Tiene varias funciones como ejemplo *removeOutliers*, *normalizeText*, *filterVa
 
 ## Parsear_JSON.scala
 
-### Ubicación
-`utilities/Parsear_JSON.scala`
-
 ### Propósito
 
 Este objeto se encarga de limpiar y convertir strings con formato JSON no estándar (estilo Python) en JSON válido, permitiendo su posterior parseo con **Circe**.
@@ -1458,7 +1486,7 @@ import cats.syntax.either._
 ```scala
 def cleanJsonString(raw: String): String = {
   if (raw == null) return "[]"
-  val trimmed = raw.trim
+  val trimmed:String = raw.trim
   if (trimmed.isEmpty || trimmed == "null" || trimmed.equalsIgnoreCase("nan")) return "[]"
 
   trimmed
@@ -1482,7 +1510,7 @@ Esta función:
 
 ```scala
 def parseJsonField[T](rawJson: String)(implicit decoder: Decoder[List[T]]): List[T] = {
-  val jsonLimpio = cleanJsonString(rawJson)
+  val jsonLimpio: String = cleanJsonString(rawJson)
   if (jsonLimpio == "[]") return List.empty
 
   decode[List[T]](jsonLimpio).getOrElse(List.empty)
@@ -1499,7 +1527,7 @@ def parseJsonField[T](rawJson: String)(implicit decoder: Decoder[List[T]]): List
 
 ```scala
 def parseJsonFieldSingle[T](rawJson: String)(implicit decoder: Decoder[T]): Option[T] = {
-  val jsonLimpio = cleanJsonString(rawJson)
+  val jsonLimpio:String = cleanJsonString(rawJson)
   if (jsonLimpio == "[]" || jsonLimpio == "{}") return None
 
   decode[T](jsonLimpio).toOption
@@ -1508,13 +1536,32 @@ def parseJsonFieldSingle[T](rawJson: String)(implicit decoder: Decoder[T]): Opti
 
 - Usado cuando el JSON representa un único objeto.
 - Devuelve `Option[T]` para manejar valores ausentes.
+¿Por qué se usa .toOption en lugar de dejar el error?
+En el pipeline de análisis de miles de filas no queremos que el programa se detenga solo porque una película entre tenga un JSON mal formateado
+
+Al usar .toOption le decimos:
+
+"Si este JSON se pudo leer pásamelo para contarlo; si no se pudo, ignóralo  y sigue con la siguiente fila".
+
+````scala
+def parseJsonFieldSafe[T](rawJson: String)(implicit decoder: Decoder[List[T]]): Either[String, List[T]] = {
+    val jsonLimpio: String = cleanJsonString(rawJson)
+    if (jsonLimpio == "[]") return Right(List.empty)
+
+    decode[List[T]](jsonLimpio).leftMap(_.getMessage)
+}
+````
+``[T]``: Indica que es genérica (puede procesar una lista de géneros, de actores, de países, etc.).
+
+``rawJson``: El texto sucio que viene directamente del CSV.
+
+``implicit decoder``: Es el "traductor" automático que Circe necesita para entender cómo convertir el JSON al tipo T.
+
+``Either[String, List[T]]``el resultado contiene o un error (Left[String]) o la lista de datos procesada (Right[List[T]])
 
 ---
 
-## Archivo: PoblarBaseDatos.scala
-
-### Ubicación
-`utilities/PoblarBaseDatos.scala`
+## PoblarBaseDatos.scala
 
 ### Propósito
 
@@ -1562,8 +1609,8 @@ private case class PeliculaParam(
 ```
 
 Esta clase:
-- Representa exactamente los campos de la tabla `Peliculas`.
-- Permite preparar datos limpios antes del insert.
+- Representa exactamente los campos de la tabla `Peliculas`
+- Permite preparar datos limpios antes del insert
 
 ---
 
@@ -1604,6 +1651,57 @@ private def buildPeliculaParam(row: Map[String, String]): Option[PeliculaParam] 
 - Valida el ID de la película.
 - Aplica conversiones seguras.
 - Devuelve `None` si el registro no es válido.
+row: Map[String, String]: Recibe una fila del CSV (Columna -> Valor).
+
+Option[PeliculaParam]: Devuelve Some(pelicula) si todo está bien, o None si la película es inválida.
+
+````scala
+val pId = safeInt(row.getOrElse("id", "0"))
+if (pId == 0) None
+````
+Intenta convertir el ID a un número entero usando una función segura.<br>
+Si el ID es 0 o no existe, la función se rinde y devuelve None. No queremos guardar películas sin identidad.
+
+````scala
+else {
+  val origLang = row.getOrElse("original_language", "un").trim.take(2)
+````
+
+Si el ID es válido, extrae el idioma original.
+
+`.take(2)`: Es vital. Si el CSV dice "English", lo corta a "En" para que quepa en el campo de la base de datos (que suele ser CHAR(2))
+
+````scala
+Some(
+        PeliculaParam(
+          pId,
+          row.getOrElse("imdb_id", "").trim.take(20),
+          row.getOrElse("title", "").trim.take(150),
+          row.getOrElse("original_title", "").trim.take(150),
+          row.getOrElse("overview", "").trim.take(2000),
+          row.getOrElse("tagline", "").trim.take(255),
+          if (row.getOrElse("adult", "false").contains("true")) 1 else 0,
+          if (row.getOrElse("video", "false").contains("true")) 1 else 0,
+          row.getOrElse("status", "Released").trim.take(20),
+          { val d = row.getOrElse("release_date", "").trim; if(d.matches("\\d{4}-\\d{2}-\\d{2}")) d else "1900-01-01" },
+          safeDouble(row.getOrElse("budget", "0")),
+          safeDouble(row.getOrElse("revenue", "0")),
+          safeInt(row.getOrElse("runtime", "0")),
+          safeDouble(row.getOrElse("popularity", "0")),
+          safeDouble(row.getOrElse("vote_average", "0")),
+          safeInt(row.getOrElse("vote_count", "0")),
+          row.getOrElse("homepage", "").trim.take(255),
+          row.getOrElse("poster_path", "").trim.take(255),
+          origLang
+        )
+      )
+````
+Como la función devuelve un Option, este Some indica que la fila es válida y que los datos que contiene están listos para ser procesados.
+
+`.trim`: Borra espacios accidentales al inicio o final.
+
+`.take(N)`  : Si el texto es más largo que el límite de la columna SQL (por ejemplo, 150 caracteres para el título), corta el excedente
+
 
 ---
 
@@ -1611,55 +1709,295 @@ private def buildPeliculaParam(row: Map[String, String]): Option[PeliculaParam] 
 
 ```scala
 def populateBatch(rows: List[Map[String, String]]): ConnectionIO[Unit] = {
-  val peliculas = rows.flatMap(buildPeliculaParam)
-  ...
-}
+    val peliculas = rows.flatMap(buildPeliculaParam)
+
+    // Preparar parámetros para géneros y relaciones
+    val generoPairs: List[(Int, Int, String)] = rows.flatMap { row =>
+      val pid = safeInt(row.getOrElse("id", "0"))
+      if (pid == 0) Nil
+      else {
+        parseJsonField[Genres](row.getOrElse("genres", "[]")).map(g => (g.id, pid, g.name.take(50)))
+      }
+    }
+
+    val uniqueGeneros: List[(Int, String)] = generoPairs.map { case (gid, _, name) => (gid, name) }.distinct
+    val peliculasGeneros: List[(Int, Int)] = generoPairs.map { case (gid, pid, _) => (pid, gid) }
+
+    val insertPelSql = "INSERT IGNORE INTO Peliculas (idPelicula, imdb_id, title, original_title, overview, tagline, adult, video, status, release_date, budget, revenue, runtime, popularity, vote_average, vote_count, homepage, poster_path, original_language) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+    val insertGeneroSql = "INSERT IGNORE INTO Generos (idGenero, name) VALUES (?,?)"
+    val insertPelGenSql = "INSERT IGNORE INTO Peliculas_Generos (idPelicula, idGenero) VALUES (?,?)"
+
+    val peliTuples = peliculas.map(p => (
+      p.idPelicula,
+      p.imdb_id,
+      p.title,
+      p.original_title,
+      p.overview,
+      p.tagline,
+      p.adult,
+      p.video,
+      p.status,
+      p.release_date,
+      p.budget,
+      p.revenue,
+      p.runtime,
+      p.popularity,
+      p.vote_average,
+      p.vote_count,
+      p.homepage,
+      p.poster_path,
+      p.original_language
+    ))
+
+    val generoTuples = uniqueGeneros.map { case (id, name) => (id, name) }
+    val pelGenTuples = peliculasGeneros.map { case (pid, gid) => (pid, gid) }
+
+    val insertPel = Update[(Int, String, String, String, String, String, Int, Int, String, String, Double, Double, Int, Double, Double, Int, String, String, String)](insertPelSql).updateMany(peliTuples)
+    val insertGen = Update[(Int, String)](insertGeneroSql).updateMany(generoTuples)
+    val insertPelGen = Update[(Int, Int)](insertPelGenSql).updateMany(pelGenTuples)
+
+    for {
+      // Batch inserts de películas y géneros (optimizados)
+      _ <- if (peliTuples.nonEmpty) insertPel.void else FC.unit
+      _ <- if (generoTuples.nonEmpty) insertGen.void else FC.unit
+      _ <- if (pelGenTuples.nonEmpty) insertPelGen.void else FC.unit
+
+      // Para el resto de relaciones procesamos por fila
+      _ <- rows.traverse_ { row =>
+        val keywords = parseJsonField[Keywords](row.getOrElse("keywords", "[]"))
+        val companies = parseJsonField[Production_Companies](row.getOrElse("production_companies", "[]"))
+        val countries = parseJsonField[Production_Countries](row.getOrElse("production_countries", "[]"))
+        val spokenLangs = parseJsonField[Spoken_Languages](row.getOrElse("spoken_languages", "[]"))
+        val collectionOpt = parseJsonFieldSingle[BelongToCollection](row.getOrElse("belongs_to_collection", "{}"))
+        val cast = parseJsonField[Cast](row.getOrElse("cast", "[]"))
+        val crew = parseJsonField[Crew](row.getOrElse("crew", "[]"))
+        val ratings = parseJsonField[Ratings](row.getOrElse("ratings", "[]"))
+
+        val pid = safeInt(row.getOrElse("id", "0"))
+        if (pid == 0) FC.unit
+        else {
+          val insKeywords = keywords.traverse { k =>
+            sql"INSERT IGNORE INTO Keywords (idKeyword, name) VALUES (${k.id}, ${k.name.take(100)})".update.run *>
+              sql"INSERT IGNORE INTO Peliculas_Keywords (idPelicula, idKeyword) VALUES ($pid, ${k.id})".update.run
+          }
+
+          val insCountries = countries.traverse { c =>
+            sql"INSERT IGNORE INTO Paises (iso_3166_1, name) VALUES (${c.iso_3166_1.take(2)}, ${c.name.take(100)})".update.run *>
+              sql"INSERT IGNORE INTO Peliculas_Paises (idPelicula, iso_3166_1) VALUES ($pid, ${c.iso_3166_1.take(2)})".update.run
+          }
+
+          val insCompanies = companies.traverse { c =>
+            sql"INSERT IGNORE INTO Companias (idCompania, name, origin_country) VALUES (${c.id}, ${c.name.take(100)}, ${c.origin_country.map(_.take(2))})".update.run *>
+              sql"INSERT IGNORE INTO Peliculas_Companias (idPelicula, idCompania) VALUES ($pid, ${c.id})".update.run
+          }
+
+          val insSpoken = spokenLangs.traverse { l =>
+            sql"INSERT INTO Idiomas (iso_639_1, name) VALUES (${l.iso_639_1.take(2)}, ${l.name.take(50)}) ON DUPLICATE KEY UPDATE name = VALUES(name)".update.run *>
+              sql"INSERT IGNORE INTO Peliculas_Idiomas (idPelicula, iso_639_1) VALUES ($pid, ${l.iso_639_1.take(2)})".update.run
+          }
+
+          val insCollection = collectionOpt.map { c =>
+            sql"INSERT IGNORE INTO Colecciones (idColeccion, name, poster_path, backdrop_path) VALUES (${c.id}, ${c.name.take(100)}, ${c.poster_path.map(_.take(255))}, ${c.backdrop_path.map(_.take(255))})".update.run *>
+              sql"INSERT IGNORE INTO Peliculas_Colecciones (idPelicula, idColeccion) VALUES ($pid, ${c.id})".update.run
+          }.getOrElse(FC.unit)
+
+          val insCast = cast.traverse { a =>
+            sql"INSERT IGNORE INTO Actores (idActor, name, gender, profile_path) VALUES (${a.cast_id}, ${a.name.take(100)}, ${a.gender.getOrElse(0)}, ${a.profile_path.map(_.take(255))})".update.run *>
+              sql"INSERT IGNORE INTO Asignaciones (idActor, idPelicula, `character`, cast_order, credit_id) VALUES (${a.cast_id}, $pid, ${a.character.map(_.take(150))}, ${a.order.getOrElse(0)}, ${a.credit_id.map(_.take(50))})".update.run
+          }
+
+          val insCrew = crew.traverse { c =>
+            for {
+              _ <- sql"INSERT IGNORE INTO Departamentos (name) VALUES (${c.department.take(50)})".update.run
+              _ <- sql"INSERT IGNORE INTO Personal (idPersonal, name, gender, profile_path) VALUES (${c.id}, ${c.name.take(100)}, ${c.gender.getOrElse(0)}, ${c.profile_path.map(_.take(255))})".update.run
+              _ <- sql"""
+                INSERT IGNORE INTO Trabajos (idPersonal, idPelicula, idDepartamento, job, credit_id)
+                VALUES (
+                  ${c.id}, $pid,
+                  (SELECT idDepartamento FROM Departamentos WHERE name = ${c.department.take(50)} LIMIT 1),
+                  ${c.job.take(100)}, ${c.credit_id.map(_.take(50))}
+                )
+              """.update.run
+            } yield ()
+          }
+
+          val insRatings = ratings.traverse { r =>
+            sql"INSERT IGNORE INTO Usuarios (userId) VALUES (${r.userId})".update.run *>
+              sql"INSERT IGNORE INTO Calificaciones (userId, idPelicula, rating, timestamp) VALUES (${r.userId}, $pid, ${r.rating}, ${r.timestamp})".update.run
+          }
+
+          // Ejecutar todas las operaciones en orden
+          insKeywords *> insCountries *> insCompanies *> insSpoken *> insCollection *> insCast *> insCrew *> insRatings.void
+        }
+      }
+    } yield ()
+  }
 ```
 
 - Inserta datos en múltiples tablas.
 - Usa `INSERT IGNORE` para evitar duplicados.
 - Ejecuta todo dentro de una transacción.
 
+`val peliculas = rows.flatMap(buildPeliculaParam)`: Convierte las filas de texto en objetos PeliculaParam. Usa flatMap para descartar automáticamente las filas que devolvieron None
+
+``val generoPairs: List[(Int, Int, String)] = rows.flatMap { ... }``: Extrae de cada fila el ID de la película y su lista de géneros JSON. Crea una lista de tripletas: (ID_Género, ID_Película, Nombre_Género)
+
+``val uniqueGeneros = ... .distinct``: Filtra los géneros para no intentar insertar el mismo género ("Acción", por ejemplo) mil veces. Solo guarda parejas únicas de (ID, Nombre).
+
+``val peliculasGeneros = ...``: Crea la lista de relaciones para la tabla intermedia que une películas con géneros.
+
+``val insertPelSql = "INSERT IGNORE INTO..."``: Define la consulta SQL para las películas el IGNORE es clave: si la película ya existe en la base de datos, MySQL no lanza error, simplemente salta esa fila
+
+``val insertGeneroSql / val insertPelGenSql``: Lo mismo para las tablas de géneros y su relación con peliculas
+
+``val peliTuples = peliculas.map(...)``: Convierte los objetos PeliculaParam en tuplas que la librería Doobie entiende para ejecutar en masa.
+
+``val insertPel = Update[...](insertPelSql).updateMany(peliTuples)``: Aquí ocurre la optimización en lugar de ir una por una, prepara una sola orden para insertar todas las películas del lote de golpe.
+
+- ``for{....}.yield()``
+  - ``_ <- if (peliTuples.nonEmpty) insertPel.void else FC.unit``: Ejecuta la inserción masiva de películas. Si la lista está vacía, no hace nada
+
+  - ``_ <- if (generoTuples.nonEmpty) ... / _ <- if (pelGenTuples.nonEmpty) ...``: Ejecuta las inserciones masivas de géneros y sus relaciones.
+
+
+``_ <- rows.traverse_ { row => ... }``: Empieza a recorrer cada fila del lote para procesar sus detalles JSON.
+
+``val keywords = ... / val cast = ... / val crew = ...``: Usa parseJsonField para convertir el texto JSON de cada columna en listas de objetos Scala.
+
+``if (pid == 0) FC.unit``: Si no hay ID de película, ignora esta fila y sigue con la siguiente.
+
+Para cada sub-elemento el código hace lo siguiente:
+
+``sql"INSERT IGNORE INTO ...".update.run``: Inserta el elemento maestro (ej. el Actor).
+
+``*> sql"INSERT IGNORE INTO ...".update.run``: El símbolo *> significa "y después haz esto". Inserta la relación (ej. Película_Actor).
+
+En Idiomas, usa ON DUPLICATE KEY UPDATE name = VALUES(name). Esto significa que si el idioma ya existe, actualiza su nombre en lugar de ignorarlo.
+
+``val insCollection = collectionOpt.map { ... }.getOrElse(FC.unit)``: Como una película puede no pertenecer a una colección, usa un map sobre un Option.
+
+- ``val insCrew = crew.traverse { c => ... }``:
+
+  - Primero inserta el Departamento
+
+  - Luego inserta al Personal
+
+  - Finalmente usa un (SELECT idDepartamento...): Esto es muy útil porque busca el ID del departamento por su nombre para poder insertarlo en la tabla Trabajos
+
+``insKeywords *> insCountries *> ... *> insRatings.void``: Conecta todas las pequeñas tareas de inserción de esa fila en una sola gran cadena de ejecución.
+
+``yield ()``: Finaliza la función indicando que el proceso de guardado terminó.
+
 ---
 
 ## Archivo: Main.scala
-
-### Ubicación
-`Main.scala`
 
 ### Propósito
 
 Es el punto de entrada de la aplicación. Orquesta la lectura del CSV, la carga a base de datos y las fases de análisis.
 
 ---
+```scala
+import cats.effect.{IO, IOApp}
+import cats.implicits.*
+import fs2.io.file.Path
+import models.*
+import data.*
+import utilities.*
+import io.circe.generic.auto.*
+import doobie.implicits.toConnectionIOOps
+import doobie.implicits.toSqlInterpolator
+import doobie.*
+```
+
+``cats.effect.{IO, IOApp}``: Trae la librería Cats Effect.
+
+``IO``: Es la "caja" donde metemos cualquier operación peligrosa (leer archivos, escribir en DB). Evita que el programa se ejecute antes de tiempo.
+
+``IOApp``: Es la plantilla para hacer una aplicación ejecutable moderna.
+
+``cats.implicits.*``:Permite usar .traverse, .mapN y operadores como *> (haz esto y luego aquello).
+traverse:es un método de alto nivel que permite iterar sobre una estructura de datos (como una List), aplicar una función que devuelve un contexto efectivo (como Option, Either, o Future), y acumular los resultados dentro de ese contexto ejemplo:
+
+```scala
+import cats.effect.IO
+import cats.implicits.*
+
+// Paso 1: Define lista
+val tareas = List("Tarea 1", "Tarea 2", "Tarea 3")
+
+// Paso 2: Usa traverse
+val ejecutar: IO[Unit] = tareas.traverse { tarea =>
+  IO.println(s"Ejecutando: $tarea")
+}.void
+```
+
+
+``fs2.io.file.Path``: Manejo moderno de rutas de archivos (mejor que el java.io.File antiguo).
+
+``models.*, data.*, utilities.*``: Importa tu propio código. Trae las clases Movie, las funciones de lectura y los decodificadores que vimos antes.
+
+``io.circe.generic.auto.*``: Magia de Circe. Permite que el compilador escriba automáticamente el código para leer JSONs sin que tú tengas que definir cada campo manualmente.
+
+``doobie.implicits... y doobie.*``: Herramientas para la base de datos.
+
+``toSqlInterpolator``: Permite escribir sql"SELECT...".
+
+``toConnectionIOOps``: Permite ejecutar las consultas con .transact(...).
+
+
+``val filePath: Path = Path("src/main/resources/data/pi_movies_complete (3).csv")``Define la ruta fija a tu archivo de datos. Al ser un val, es inmutable 
+
+
+
 
 ### Configuración del pipeline
 
 ```scala
-val BATCH_SIZE: Int = 1000
+val BATCH_SIZE: Int = 1160
 val SKIP_ANALYSIS: Boolean = false
 val DISABLE_FK_CHECKS: Boolean = true
 ```
 
 - Permite controlar el rendimiento y el comportamiento del sistema.
-
+`Batch`: agrupa un conjunto de datos para ser procesador automaticamente
+`SKIP_ANALYSIS`permite mostrar los analisis en consola
+`disable_fk_checks`descativa las clasves foraneas para optimizar la carga masiva de los datos
 ---
 
 ### Pipeline optimizado
 
 ```scala
 def pipelineOptimizado(
-  transactor: Transactor[IO],
-  rows: List[Map[String, String]]
-): IO[Unit] = {
-  ...
-}
+                          transactor: doobie.Transactor[IO],
+                          rows: List[Map[String, String]]
+                        ): IO[Unit] = {
+    for {
+      _ <- if (DISABLE_FK_CHECKS)
+        sql"SET FOREIGN_KEY_CHECKS=0".update.run.transact(transactor)
+      else IO.unit
+
+      batches = rows.grouped(BATCH_SIZE).toList
+      _ <- IO.println(s"Total de lotes: ${batches.length}")
+      _ <- procesarLotes(transactor, batches)
+
+      _ <- if (DISABLE_FK_CHECKS)
+        sql"SET FOREIGN_KEY_CHECKS=1".update.run.transact(transactor)
+      else IO.unit
+
+      _ <- IO.println("Población de BD completada")
+    } yield ()
+  }
 ```
 
 - Divide los datos en lotes.
 - Desactiva claves foráneas para mejorar rendimiento.
 - Ejecuta inserciones por batch.
-
+`rows: List[Map[String, String]]` esto es una pareja de clave valor
+`.update.run` esto primero lo convierte a unn objeto Update y el .run lo convierte en un objeto ConnectionIO[Int]
+`batches = rows.grouped(BATCH_SIZE).toList`
+- Recibe el transactor (la conexión abierta) y las rows (todos los datos crudos del CSV).
 ---
 
 ### Procesamiento con FS2
@@ -1679,6 +2017,246 @@ def procesarLotes(
 
 - Procesa cada lote de forma controlada.
 - Maneja errores sin detener toda la ejecución.
+``fs2.Stream``: Convierte la lista estática en un flujo de datos.
+
+``.emits``: Emite los elementos uno por uno ejemplo 
+````scala
+import cats.effect.{IO, IOApp}
+import fs2.Stream
+
+object EjemploEmits extends IOApp.Simple {
+
+  val run: IO[Unit] = {
+    // 1. Una colección estándar de Scala
+    val nombres = List("Alice", "Bob", "Charlie", "Diana")
+
+    // 2. Usamos .emits para convertir la lista en un Stream
+    // .zipWithIndex le añade el índice a cada elemento
+    Stream.emits(nombres).zipWithIndex
+      .evalMap { case (nombre, idx) =>
+        IO.println(s"Procesando [$idx]: $nombre...") *> 
+      }
+      .compile // Preparamos para ejecutar
+      .drain   // Ignoramos los resultados finales, solo queremos los efectos
+  }
+}
+````
+
+``.zipWithIndex``: Le pega un número a cada lote (Lote 0, Lote 1...) para poder mostrar ejemplo practico: 
+
+````scala
+import cats.effect.{IO, IOApp}
+import fs2.Stream
+
+object EjemploSimple extends IOApp.Simple {
+  val run: IO[Unit] = {
+    
+    val frutas = List("Manzana", "Pera", "Plátano")
+
+    Stream.emits(frutas)       // 1. Emite: "Manzana", "Pera", "Plátano"
+      .zipWithIndex            // 2. Convierte en: ("Manzana", 0), ("Pera", 1), ("Plátano", 2)
+      .evalMap { case (f, i) => 
+        IO.println(s"Fruta $i es: $f") 
+      }
+      .compile
+      .drain
+  }
+
+  //resultado
+  //Fruta 0 es: Manzana
+  //Fruta 1 es: Pera
+  //Fruta 2 es: Plátano
+}
+````
+
+``.covary[IO]``Le dice al Stream que va a realizar operaciones de "Efecto IO"
+
+``.evalMap { case (batch, idx) =>`` Para cada elemento del flujo, ejecuta una acción IO y espera a que termine antes de pasar al siguiente. Esto asegura que insertes el Lote 1, luego el 2, etc.
+
+``for {res <- PoblarBaseDatos.populateBatch(batch).transact(transactor).attempt`` Llama a PoblarBaseDatos.populateBatch.
+
+  - ``.transact(transactor)``: Ejecuta el SQL real en la base de datos.
+
+  - ``.attempt``: Convierte una posible explosión (Excepción) en un valor Either (Izquierda=Error, Derecha=Éxito). Esto evita que un error en el procesamiento de lotes
+
+  ````scala
+  _ <- res match {
+            case Left(e) => IO.println(s"ERROR Batch $idx: ${e.getMessage}")
+            case Right(_) =>
+              val porcentaje:Double = (idx + 1) * 100 / batches.length
+              IO.println(s"Batch ${idx + 1}/${batches.length} ... $porcentaje% completado")
+          }
+  ````
+imprime el error pero sigue procesando, si funcionó, calcula el porcentaje y lo imprime
+
+``.compile`` Prepara todo el plan de ejecución del Stream.
+``.drain`` ejecuta todo y tira los resultados intermedios
+
+````scala
+def analisisfase2y3(moviesClean: List[Movie]): IO[Unit] = {
+    IO.println("\n>>> FASE 2: ANÁLISIS UNIVARIABLE") *>
+      AnalisisMovie.analyzeMovieStats(moviesClean) *>
+      IO.println("\n>>> FASE 3: ANÁLISIS BIVARIABLE") *>
+      AnalisisMovie.analyzeBivariable(moviesClean)
+  }
+````
+
+Llama a las estadísticas numéricas (Promedios, Medianas, Correlaciones)
+
+
+````scala
+def analisisfases4a12(): IO[Unit] = {
+    for {
+      // FASE 4: GÉNEROS
+      analisisGeneros <- LecturaJSON.analyzeGenres(filePath)
+      _ <- mostrarAnalisisJsonData("GÉNEROS", analisisGeneros)
+
+      // FASE 5: ROLES EN PRODUCCIÓN
+      analisisRoles <- LecturaJSON.analyzeCrewByJob(filePath)
+      _ <- mostrarAnalisisJsonData("ROLES EN PRODUCCIÓN", analisisRoles)
+
+      // FASE 6: DEPARTAMENTOS DE PRODUCCIÓN (NUEVO - FALTABA)
+      analisisDepartamentos <- LecturaJSON.analyzeCrewByDepartment(filePath)
+      _ <- mostrarAnalisisJsonData("DEPARTAMENTOS DE PRODUCCIÓN", analisisDepartamentos)
+
+      // FASE 7: PALABRAS CLAVE
+      analisisKeywords <- LecturaJSON.analisisKeyWords(filePath)
+      _ <- mostrarAnalisisJsonData("PALABRAS CLAVE", analisisKeywords)
+
+      // FASE 8: IDIOMAS HABLADOS
+      analisisIdiomas <- LecturaJSON.analisisSpokenLenguaje(filePath)
+      _ <- mostrarAnalisisJsonData("IDIOMAS HABLADOS", analisisIdiomas)
+
+      // FASE 9: COLECCIONES
+      analisisColecciones <- LecturaJSON.analisisColecciones(filePath)
+      _ <- mostrarAnalisisJsonData("COLECCIONES", analisisColecciones)
+
+      // FASE 10: COMPAÑÍAS PRODUCTORAS
+      analisisCompanias <- LecturaJSON.analisisCompanias(filePath)
+      _ <- mostrarAnalisisJsonData("COMPAÑÍAS PRODUCTORAS", analisisCompanias)
+
+      // FASE 11: PAÍSES PRODUCTORES
+      analisisPaises <- LecturaJSON.analisisPaises(filePath)
+      _ <- mostrarAnalisisJsonData("PAÍSES PRODUCTORES", analisisPaises)
+
+    } yield ()
+  }
+````
+analisisfases4a12
+
+Es un for-comprehension gigante
+
+Llama a LecturaJSON.analyze...: Esto devuelve un IO[Map[String, Int]] esto es un dato de tipo (clave, valor)
+
+Llama a mostrarAnalisisJsonData imprime los resultados
+
+Repite para géneros, actores, países, etc.
+
+
+````scala
+def analisisfases13a16(
+                          movies: List[Movie],
+                          rows: List[Map[String, String]],
+                          filePath: Path
+                        ): IO[Unit] = {
+    for {
+      _ <- IO.println("\n>>> FASE 13: VALIDACIÓN DE IDs")
+      count <- IO { rows.count(r => Limpieza.isValidId(r.getOrElse("id", ""))) }
+      _ <- printSection(s"Total de películas con ID válido: $count")
+
+      _ <- IO.println("\n>>> FASE 14: ANÁLISIS DE CAST (ACTORES)")
+      _ <- analizarCast(movies)
+
+      _ <- IO.println("\n>>> FASE 15: ANÁLISIS DE RATINGS")
+      stats <- LecturaJSON.analisisRatings(filePath)
+      _ <- printSection("ANÁLISIS COMPLETO DE RATINGS") >>
+        IO.println(f"Total de ratings: ${stats.totalRatings}%,d") >>
+        IO.println(f"Usuarios únicos: ${stats.usuariosUnicos}%,d") >>
+        IO.println(f"Películas con ratings: ${stats.peliculasConRatings}%,d") >>
+        printSection("")
+
+      _ <- IO.println("\n>>> FASE 16: ANÁLISIS DE FECHAS DE ESTRENO")
+      fechaStats <- LecturaJSON.analizarFechasEstreno(filePath)
+      tasaFechas = if (fechaStats.totalFilas > 0)
+        fechaStats.fechasValidas.toDouble / fechaStats.totalFilas * 100 else 0.0
+      _ <- printSection("ANÁLISIS DE FECHAS DE ESTRENO") >>
+        IO.println(f"Fechas válidas: ${fechaStats.fechasValidas}%,d") >>
+        IO.println(f"Fechas inválidas: ${fechaStats.fechasInvalidas}%,d") >>
+        IO.println(f"Tasa de éxito: $tasaFechas%.2f%%") >>
+        printSection("")
+    } yield ()
+  }
+````
+``count <- IO { rows.count(r => Limpieza.isValidId(r.getOrElse("id", ""))) }`` cuenta la cantidad de id de peliculas validos
+
+``stats <- LecturaJSON.analisisRatings(filePath)`` analisa la cantidad de votos totales usuarios unicos y las peliculas que obtuvieron calificacion
+
+``fechaStats <- LecturaJSON.analizarFechasEstreno(filePath)`` calcula el porcentaje de fechas que se parsearon con exito
+
+````scala
+def analizarCast(movies: List[Movie]): IO[Unit] = {
+    val actores = movies.flatMap(m => Parsear_JSON.parseJsonField[Cast](m.cast))
+    val actoresPorNombre = actores.foldLeft(Map.empty[String, Int]) { (acc, a) =>
+      acc.updated(a.name, acc.getOrElse(a.name, 0) + 1)
+    }
+
+    val topActores = actoresPorNombre.toList.sortBy(-_._2).take(15)
+    val peliculasConCast = movies.count(m => m.cast.trim != "[]" && m.cast.trim.nonEmpty)
+    val promedioActores = if (peliculasConCast > 0) actores.length.toDouble / peliculasConCast else 0.0
+
+    printSection("ESTADÍSTICAS DE CAST (ACTORES)") >>
+      IO.println(f"Total de películas con cast: $peliculasConCast%,d") >>
+      IO.println(f"Total de actores únicos: ${actoresPorNombre.size}%,d") >>
+      IO.println(f"Total de apariciones: ${actores.length}%,d") >>
+      IO.println(f"Promedio por película: $promedioActores%.2f") >>
+      IO.println("\nTOP 15 ACTORES:") >>
+      IO.println("-" * 70) >>
+      topActores.zipWithIndex.traverse { case ((actor, count), idx) =>
+        IO.println(f"  ${idx + 1}%2d. $actor%-30s: $count%3d películas")
+      }.void >>
+      printSection("")
+  }
+````
+
+``flatMap``: Aplana las listas por ejemplo: "[{"name": "Tom Hanks"}, {"name": "Tim Allen"}]" ahora quedaria [ Tom Hanks, Tim Allen, Elijah Wood, Ian McKellen, Brad Pitt ]
+
+````scala
+val actoresPorNombre = actores.foldLeft(Map.empty[String, Int]) { (acc, a) =>
+      acc.updated(a.name, acc.getOrElse(a.name, 0) + 1)
+    }
+````
+Usa un foldLeft para contar frecuencias.
+
+````scala
+def mostrarAnalisisJsonData(
+                               titulo: String,
+                               datos: Map[String, Int],
+                               topN: Int = 15
+                             ): IO[Unit] = {
+    if (datos.isEmpty) {
+      IO.println(s"\n>>> FASE: $titulo - No hay datos")
+    } else {
+      val total = datos.values.sum
+      val topItems = datos.toList.sortBy(-_._2).take(topN)
+
+      IO.println(s"\n>>> FASE: $titulo") >>
+        printSection(s"TOP $topN - $titulo") >>
+        IO.println(f"Total único: ${datos.size}%,d") >>
+        IO.println(f"Total de relaciones: $total%,d\n") >>
+        topItems.zipWithIndex.traverse { case ((item, count), idx) =>
+          val porcentaje = if (total > 0) count.toDouble / total * 100 else 0.0
+          IO.println(
+            f"  ${idx + 1}%2d. $item%-40s: $count%6d ($porcentaje%5.2f%%)"
+          )
+        }.void >>
+        printSection("")
+    }
+````
+
+``def mostrarAnalisisJsonData(..., topN: Int = 15): IO[Unit] = {`` Define el valor por defecto topN = 15.
+
+  - ``val topItems = datos.toList.sortBy(-_._2).take(topN)``Ordena descendente (-) por el valor (_._2) y toma los top N.
+  - ``val porcentaje = if (total > 0) count.toDouble / total * 100 else 0.0`` Calcula qué porcentaje del total representa cada ítem
 
 ---
 
@@ -1686,13 +2264,64 @@ def procesarLotes(
 
 ```scala
 def run: IO[Unit] = {
-  ConexionDB.xa.use { transactor =>
-    ...
+    ConexionDB.xa.use { transactor =>
+      for {
+        _ <- printHeader("ANÁLISIS EXPLORATORIO DE DATOS - PELÍCULAS (COMPLETO)")
+
+        results <- LecturaCSV.readMoviesFromCsv(filePath)
+        movies = results.collect { case Right(m) => m }
+        errors = results.collect { case Left(_) => 1 }.length
+        rows <- LecturaCSV.readCsvAsMap(filePath)
+        _ <- IO.println(s"✓ ${rows.length} filas cargadas")
+
+        _ <- IO.println("\n>>> FASE 1: CARGA Y LIMPIEZA")
+        moviesClean = Limpieza.removeDuplicatesById(movies)
+        _ <- IO.println(s"Filas procesadas: ${movies.length}")
+        _ <- IO.println(s"Filas con errores: $errors")
+        _ <- IO.println(s"Duplicados eliminados: ${movies.length - moviesClean.length}")
+        _ <- IO.println(s"Películas finales: ${moviesClean.length}")
+
+        // Ejecutar análisis primero (secuencial)
+        _ <- if (!SKIP_ANALYSIS) {
+          analisisfase2y3(moviesClean) *>
+            analisisfases4a12()  // ← AHORA COMPLETO: incluye departamentos
+        } else IO.unit
+
+        // Finalmente análisis finales (13-16)
+        _ <- if (!SKIP_ANALYSIS) {
+          analisisfases13a16(moviesClean, rows, filePath)
+        } else IO.unit
+
+        // Luego población BD
+        _ <- IO.println("\n>>> FASE 17: POBLACIÓN DE BASE DE DATOS")
+        _ <- pipelineOptimizado(transactor, rows)
+
+        _ <- printHeader("PROCESO TERMINADO EXITOSAMENTE")
+      } yield ()
+    }
   }
-}
 ```
 
 - Inicializa la conexión.
 - Ejecuta carga de datos.
 - Lanza análisis exploratorio.
 
+````scala
+movies = results.collect { case Right(m) => m }
+errors = results.collect { case Left(_) => 1 }.length
+````
+``movies``: Lista limpia de objetos Movie.
+
+``errors``: Número de filas que fallaron al leerse.`
+
+``rows <- LecturaCSV.readCsvAsMap(filePath)`` Doble Lectura se vuelve a leer el archivo, pero esta vez como Map[String, String] crudo para poblar la base de datos usamos la logica personalizada de los parseos(por ejemplo safeInt) ya que trabaja mejor sobre los datos crudos
+
+``moviesClean = Limpieza.removeDuplicatesById(movies)`` remueve la duplicacion de id de pelicula
+
+``_ <- if (!SKIP_ANALYSIS) { ... } else IO.unit`` ejecuta el analisis
+
+``_ <- pipelineOptimizado(transactor, rows)`` Llama al pipeline pasándole la conexión activa y los datos crudos
+
+``def printHeader(text: String): IO[Unit] = ...`` simplemente imprime líneas de = para que la consola se vea ordenada y profesional. Usa >> que es sinónimo de flatMap para encadenar los println.
+
+``def printSection(text: String): IO[Unit] =....`` imprime secciones para cada fase

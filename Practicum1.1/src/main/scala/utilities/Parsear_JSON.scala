@@ -17,9 +17,9 @@ object Parsear_JSON {
     if (trimmed.isEmpty || trimmed == "null" || trimmed.equalsIgnoreCase("nan")) return "[]"
 
     trimmed
-      .replace("'", "\"")       
-      .replace("None", "null") 
-      .replace("True", "true") 
+      .replace("'", "\"")
+      .replace("None", "null")
+      .replace("True", "true")
       .replace("False", "false")
       .replace("nan", "null")
       .replace("\"{", "{").replace("}\"", "}")

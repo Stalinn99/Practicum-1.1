@@ -42,10 +42,10 @@ object PoblarBaseDatos {
 
   /** Construye parámetros de película desde un row */
   private def buildPeliculaParam(row: Map[String, String]): Option[PeliculaParam] = {
-    val pId = safeInt(row.getOrElse("id", "0"))
+    val pId: Int = safeInt(row.getOrElse("id", "0"))
     if (pId == 0) None
     else {
-      val origLang = row.getOrElse("original_language", "un").trim.take(2)
+      val origLang: String = row.getOrElse("original_language", "un").trim.take(2)
       Some(
         PeliculaParam(
           pId,

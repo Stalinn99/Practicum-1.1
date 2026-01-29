@@ -73,30 +73,41 @@ object Main extends IOApp.Simple {
       AnalisisMovie.analyzeBivariable(moviesClean)
   }
 
-  // ============ Usa funciones de LecturaJSON =============
+  // ============= Usa funciones de LecturaJSON =============
   def analisisfases4a12(): IO[Unit] = {
     for {
-      // Usar las funciones de LecturaJSON en lugar de código duplicado
+      // FASE 4: GÉNEROS
       analisisGeneros <- LecturaJSON.analyzeGenres(filePath)
-      _ <- mostrarAnalisisJson("GÉNEROS", IO.pure(analisisGeneros))
+      _ <- mostrarAnalisisJsonData("GÉNEROS", analisisGeneros)
 
+      // FASE 5: ROLES EN PRODUCCIÓN
       analisisRoles <- LecturaJSON.analyzeCrewByJob(filePath)
-      _ <- mostrarAnalisisJson("ROLES EN PRODUCCIÓN", IO.pure(analisisRoles))
+      _ <- mostrarAnalisisJsonData("ROLES EN PRODUCCIÓN", analisisRoles)
 
+      // FASE 6: DEPARTAMENTOS DE PRODUCCIÓN
+      analisisDepartamentos <- LecturaJSON.analyzeCrewByDepartment(filePath)
+      _ <- mostrarAnalisisJsonData("DEPARTAMENTOS DE PRODUCCIÓN", analisisDepartamentos)
+
+      // FASE 7: PALABRAS CLAVE
       analisisKeywords <- LecturaJSON.analisisKeyWords(filePath)
-      _ <- mostrarAnalisisJson("PALABRAS CLAVE", IO.pure(analisisKeywords))
+      _ <- mostrarAnalisisJsonData("PALABRAS CLAVE", analisisKeywords)
 
+      // FASE 8: IDIOMAS HABLADOS
       analisisIdiomas <- LecturaJSON.analisisSpokenLenguaje(filePath)
-      _ <- mostrarAnalisisJson("IDIOMAS HABLADOS", IO.pure(analisisIdiomas))
+      _ <- mostrarAnalisisJsonData("IDIOMAS HABLADOS", analisisIdiomas)
 
+      // FASE 9: COLECCIONES
       analisisColecciones <- LecturaJSON.analisisColecciones(filePath)
-      _ <- mostrarAnalisisJson("COLECCIONES", IO.pure(analisisColecciones))
+      _ <- mostrarAnalisisJsonData("COLECCIONES", analisisColecciones)
 
+      // FASE 10: COMPAÑÍAS PRODUCTORAS
       analisisCompanias <- LecturaJSON.analisisCompanias(filePath)
-      _ <- mostrarAnalisisJson("COMPAÑÍAS PRODUCTORAS", IO.pure(analisisCompanias))
+      _ <- mostrarAnalisisJsonData("COMPAÑÍAS PRODUCTORAS", analisisCompanias)
 
+      // FASE 11: PAÍSES PRODUCTORES
       analisisPaises <- LecturaJSON.analisisPaises(filePath)
-      _ <- mostrarAnalisisJson("PAÍSES PRODUCTORES", IO.pure(analisisPaises))
+      _ <- mostrarAnalisisJsonData("PAÍSES PRODUCTORES", analisisPaises)
+
     } yield ()
   }
 
@@ -156,33 +167,30 @@ object Main extends IOApp.Simple {
       printSection("")
   }
 
-  def mostrarAnalisisJson(
-                           titulo: String,
-                           ioData: IO[Map[String, Int]],
-                           topN: Int = 15
-                         ): IO[Unit] = {
-    for {
-      datos <- ioData.handleErrorWith { _ => IO.pure(Map.empty[String, Int]) }
-      _ <-
-        if (datos.isEmpty) {
-          IO.println(s"\n>>> FASE: $titulo - No hay datos")
-        } else {
-          val total = datos.values.sum
-          val topItems = datos.toList.sortBy(-_._2).take(topN)
+  // ============= MOSTRAR ANÁLISIS =============
+  def mostrarAnalisisJsonData(
+                               titulo: String,
+                               datos: Map[String, Int],
+                               topN: Int = 15
+                             ): IO[Unit] = {
+    if (datos.isEmpty) {
+      IO.println(s"\n>>> FASE: $titulo - No hay datos")
+    } else {
+      val total = datos.values.sum
+      val topItems = datos.toList.sortBy(-_._2).take(topN)
 
-          IO.println(s"\n>>> FASE: $titulo") >>
-            printSection(s"TOP $topN - $titulo") >>
-            IO.println(f"Total único: ${datos.size}%,d") >>
-            IO.println(f"Total de relaciones: $total%,d\n") >>
-            topItems.zipWithIndex.traverse { case ((item, count), idx) =>
-              val porcentaje = if (total > 0) count.toDouble / total * 100 else 0.0
-              IO.println(
-                f"  ${idx + 1}%2d. $item%-40s: $count%6d ($porcentaje%5.2f%%)"
-              )
-            }.void >>
-            printSection("")
-        }
-    } yield ()
+      IO.println(s"\n>>> FASE: $titulo") >>
+        printSection(s"TOP $topN - $titulo") >>
+        IO.println(f"Total único: ${datos.size}%,d") >>
+        IO.println(f"Total de relaciones: $total%,d\n") >>
+        topItems.zipWithIndex.traverse { case ((item, count), idx) =>
+          val porcentaje = if (total > 0) count.toDouble / total * 100 else 0.0
+          IO.println(
+            f"  ${idx + 1}%2d. $item%-40s: $count%6d ($porcentaje%5.2f%%)"
+          )
+        }.void >>
+        printSection("")
+    }
   }
 
   // ============= FUNCIÓN PRINCIPAL =============
@@ -190,7 +198,7 @@ object Main extends IOApp.Simple {
   def run: IO[Unit] = {
     ConexionDB.xa.use { transactor =>
       for {
-        _ <- printHeader("ANÁLISIS EXPLORATORIO DE DATOS - PELÍCULAS (OPTIMIZADO)")
+        _ <- printHeader("ANÁLISIS EXPLORATORIO DE DATOS - PELÍCULAS (COMPLETO)")
 
         results <- LecturaCSV.readMoviesFromCsv(filePath)
         movies = results.collect { case Right(m) => m }
@@ -208,7 +216,7 @@ object Main extends IOApp.Simple {
         // Ejecutar análisis primero (secuencial)
         _ <- if (!SKIP_ANALYSIS) {
           analisisfase2y3(moviesClean) *>
-            analisisfases4a12()  // ← AHORA USA LecturaJSON
+            analisisfases4a12()  // ← AHORA COMPLETO: incluye departamentos
         } else IO.unit
 
         // Finalmente análisis finales (13-16)
