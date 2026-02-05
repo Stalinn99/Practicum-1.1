@@ -216,7 +216,7 @@ object Main extends IOApp.Simple {
         // Ejecutar análisis primero (secuencial)
         _ <- if (!SKIP_ANALYSIS) {
           analisisfase2y3(moviesClean) *>
-            analisisfases4a12()  // ← AHORA COMPLETO: incluye departamentos
+            analisisfases4a12()
         } else IO.unit
 
         // Finalmente análisis finales (13-16)
