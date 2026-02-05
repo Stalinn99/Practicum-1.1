@@ -14,7 +14,7 @@ object Main extends IOApp.Simple {
   val filePath: Path = Path("src/main/resources/data/pi_movies_complete (3).csv")
 
   // ============= CONFIGURACIÓN =============
-  val BATCH_SIZE: Int = 1160
+  val BATCH_SIZE: Int = 2000
   val SKIP_ANALYSIS: Boolean = false
   val DISABLE_FK_CHECKS: Boolean = true
 
@@ -118,7 +118,7 @@ object Main extends IOApp.Simple {
                         ): IO[Unit] = {
     for {
       _ <- IO.println("\n>>> FASE 13: VALIDACIÓN DE IDs")
-      count <- IO { rows.count(r => Limpieza.isValidId(r.getOrElse("id", ""))) }
+      count <- LecturaCSV.countValidRows(filePath, "id", Limpieza.isValidId)
       _ <- printSection(s"Total de películas con ID válido: $count")
 
       _ <- IO.println("\n>>> FASE 14: ANÁLISIS DE CAST (ACTORES)")
@@ -204,9 +204,9 @@ object Main extends IOApp.Simple {
         movies = results.collect { case Right(m) => m }
         errors = results.collect { case Left(_) => 1 }.length
         rows <- LecturaCSV.readCsvAsMap(filePath)
-        _ <- IO.println(s"✓ ${rows.length} filas cargadas")
+        _ <- IO.println(s"${rows.length} filas cargadas")
 
-        _ <- IO.println("\n>>> FASE 1: CARGA Y LIMPIEZA")
+        _ <- IO.println("\n>>> FASE: CARGA Y LIMPIEZA")
         moviesClean = Limpieza.removeDuplicatesById(movies)
         _ <- IO.println(s"Filas procesadas: ${movies.length}")
         _ <- IO.println(s"Filas con errores: $errors")
