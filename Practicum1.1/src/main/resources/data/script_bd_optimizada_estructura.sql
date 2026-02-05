@@ -475,15 +475,7 @@ ALTER TABLE `MovieDatabase`.`Calificaciones` ADD INDEX `idx_califc_compuesto` (`
 -- =====================================================
 -- CONFIGURACIÓN MYSQL PARA OPTIMIZAR INSERCIONES
 -- =====================================================
-
--- Nota: innodb_log_file_size es read-only en MySQL 8.0+
--- Se debe configurar en my.cnf o my.ini ANTES de iniciar MySQL
--- Pero podemos configurar otras variables dinámicamente
-
--- Aumentar tamaño del buffer pool (para máximo rendimiento)
 -- Recomendación: usar 50% de RAM disponible
--- Para 8GB RAM: usar 4GB
--- Para 16GB RAM: usar 8GB
 -- NOTA: Si da error, significa que el buffer pool ya está inicializado
 -- Se debe configurar en my.cnf/my.ini: innodb_buffer_pool_size=4G
 SET GLOBAL innodb_buffer_pool_size=4294967296;
@@ -491,7 +483,7 @@ SET GLOBAL innodb_buffer_pool_size=4294967296;
 -- Modo de flush optimizado para carga masiva
 -- 0 = no flush a disco (más rápido, menos seguro)
 -- 1 = flush a cada transacción (ACID, más lento)
--- 2 = flush a cada segundo (recomendado) ← USAR ESTE
+-- 2 = flush a cada segundo (recomendado) USAR ESTE
 SET GLOBAL innodb_flush_log_at_trx_commit=2;
 
 -- Aumentar timeout de conexión
