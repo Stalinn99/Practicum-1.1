@@ -47,14 +47,4 @@ object Parsear_JSON {
 
     decode[T](jsonLimpio).toOption
   }
-
-  /**
-   * Versión segura que devuelve Either.
-   */
-  def parseJsonFieldSafe[T](rawJson: String)(implicit decoder: Decoder[List[T]]): Either[String, List[T]] = {
-    val jsonLimpio: String = cleanJsonString(rawJson)
-    if (jsonLimpio == "[]") return Right(List.empty)
-
-    decode[List[T]](jsonLimpio).leftMap(_.getMessage)
-  }
 }

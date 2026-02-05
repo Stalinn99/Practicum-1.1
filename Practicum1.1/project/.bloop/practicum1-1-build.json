@@ -2,15 +2,15 @@
     "version": "1.4.0",
     "project": {
         "name": "practicum1-1-build",
-        "directory": "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project",
-        "workspaceDir": "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project",
+        "directory": "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project",
+        "workspaceDir": "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project",
         "sources": [
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-2.12",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-2",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\java",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-sbt-1.0",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\target\\scala-2.12\\sbt-1.0\\src_managed\\main"
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-2.12",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-2",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\java",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\scala-sbt-1.0",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\target\\scala-2.12\\sbt-1.0\\src_managed\\main"
         ],
         "dependencies": [
             
@@ -104,11 +104,11 @@
             "C:\\Users\\Lenin\\AppData\\Local\\Coursier\\Cache\\v1\\https\\repo1.maven.org\\maven2\\net\\java\\dev\\jna\\jna-platform\\5.12.0\\jna-platform-5.12.0.jar",
             "C:\\Users\\Lenin\\AppData\\Local\\Coursier\\Cache\\v1\\https\\repo1.maven.org\\maven2\\com\\typesafe\\config\\1.4.2\\config-1.4.2.jar"
         ],
-        "out": "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build",
-        "classesDir": "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build\\scala-2.12\\sbt-1.0\\classes",
+        "out": "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build",
+        "classesDir": "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build\\scala-2.12\\sbt-1.0\\classes",
         "resources": [
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\resources",
-            "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\target\\scala-2.12\\sbt-1.0\\resource_managed\\main"
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\src\\main\\resources",
+            "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\target\\scala-2.12\\sbt-1.0\\resource_managed\\main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -213,22 +213,22 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "C:\\Users\\Lenin\\AppData\\Roaming\\Code\\User\\globalStorage\\pleiades.java-extension-pack-jdk\\java\\21",
+                "home": "C:\\Program Files\\Java\\jdk-25",
                 "options": [
-                    "-Duser.dir=C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project"
+                    "-Duser.dir=C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project"
                 ]
             },
             "mainClass": [
                 
             ],
             "runtimeConfig": {
-                "home": "C:\\Users\\Lenin\\AppData\\Roaming\\Code\\User\\globalStorage\\pleiades.java-extension-pack-jdk\\java\\21",
+                "home": "C:\\Program Files\\Java\\jdk-25",
                 "options": [
-                    "-Duser.dir=C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project"
+                    "-Duser.dir=C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project"
                 ]
             },
             "classpath": [
-                "C:\\Users\\Lenin\\Desktop\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build\\scala-2.12\\sbt-1.0\\classes",
+                "C:\\Users\\Lenin\\Desktop\\TODO\\Practicum-1.1\\Practicum1.1\\project\\.bloop\\practicum1-1-build\\scala-2.12\\sbt-1.0\\classes",
                 "C:\\Users\\Lenin\\AppData\\Local\\Coursier\\Cache\\v1\\https\\repo1.maven.org\\maven2\\ch\\epfl\\scala\\sbt-bloop_2.12_1.0\\2.0.18\\sbt-bloop_2.12_1.0-2.0.18.jar",
                 "C:\\Users\\Lenin\\AppData\\Local\\Coursier\\Cache\\v1\\https\\repo1.maven.org\\maven2\\ch\\epfl\\scala\\bloop-config_2.12\\2.3.3\\bloop-config_2.12-2.3.3.jar",
                 "C:\\Users\\Lenin\\AppData\\Local\\Coursier\\Cache\\v1\\https\\repo1.maven.org\\maven2\\com\\github\\plokhotnyuk\\jsoniter-scala\\jsoniter-scala-core_2.12\\2.13.5.2\\jsoniter-scala-core_2.12-2.13.5.2.jar",

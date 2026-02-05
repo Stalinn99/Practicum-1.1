@@ -3419,3 +3419,280 @@ Exception in thread "pool-18-thread-5" java.lang.InterruptedException
 	at java.base/java.lang.Thread.run(Thread.java:1447)
 ene 28, 2026 6:33:27 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 1825
+ene 28, 2026 6:36:39 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1881
+2026.01.28 18:43:37 INFO  compiling root (1 scala source)
+2026.01.28 18:43:42 INFO  time: compiled root in 5.71s
+Exception in thread "pool-18-thread-6" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+ene 28, 2026 6:47:12 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2160
+2026.01.28 18:53:08 INFO  compiling root (1 scala source)
+2026.01.28 18:53:10 INFO  time: compiled root in 1.95s
+Exception in thread "pool-18-thread-7" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-8" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-9" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-10" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+ene 28, 2026 6:58:53 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2526
+ene 28, 2026 6:58:57 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2532
+ene 28, 2026 7:00:00 P. M. scala.meta.internal.metals.StdReporter create$$anonfun$1
+SEVERE: java.lang.AssertionError: assertion failed: tree: ArrowAssoc[A](null:
+  (movieDecoder : fs2.data.csv.CsvRowDecoder[models.Movie, String])), pt: <notype> (full report at: C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\.reports\metals-full\2026-01-28\r_compiler-error_(root)_19-00-00-784.md)
+2026.01.28 20:23:00 INFO  compiling root (1 scala source)
+2026.01.28 20:23:00 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala
+2026.01.28 20:23:05 INFO  time: compiled root in 5.42s
+2026.01.28 20:25:57 INFO  compiling root (1 scala source)
+ene 28, 2026 8:26:01 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2972
+ene 28, 2026 8:26:01 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2971
+2026.01.28 20:26:10 INFO  time: compiled root in 13s
+ene 28, 2026 8:26:40 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2984
+2026.01.28 20:27:33 INFO  compiling root (1 scala source)
+2026.01.28 20:27:34 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 20:27:41 INFO  time: compiled root in 7.88s
+ene 28, 2026 8:43:28 P. M. scala.meta.internal.metals.StdReporter create$$anonfun$1
+SEVERE: dotty.tools.dotc.ast.Trees$UnAssignedTypeException: type of Ident(cats) is not assigned (full report at: C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\.reports\metals-full\2026-01-28\r_compiler-error_(root)_20-43-28-631.md)
+ene 28, 2026 8:43:28 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3392
+2026.01.28 20:43:28 INFO  compiling root (1 scala source)
+ene 28, 2026 8:43:32 P. M. scala.meta.internal.metals.StdReporter create$$anonfun$1
+SEVERE: dotty.tools.dotc.ast.Trees$UnAssignedTypeException: type of Ident(cats) is not assigned (full report at: C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\.reports\metals-full\2026-01-28\r_compiler-error_(root)_20-43-32-724.md)
+2026.01.28 20:43:38 INFO  time: compiled root in 9.7s
+Exception in thread "pool-18-thread-11" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-12" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-13" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-14" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2026.01.28 20:53:46 INFO  compiling root (1 scala source)
+2026.01.28 20:53:46 WARN  Could not load snapshot text for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\utilities\PoblarBaseDatos.scala
+2026.01.28 20:53:53 INFO  time: compiled root in 7.45s
+2026.01.28 22:00:14 INFO  compiling root (1 scala source)
+2026.01.28 22:00:21 INFO  time: compiled root in 6.41s
+Exception in thread "pool-18-thread-15" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+ene 28, 2026 10:00:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3833
+ene 28, 2026 10:00:31 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3837
+Exception in thread "pool-18-thread-16" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-17" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-18" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Exception in thread "pool-18-thread-19" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:207)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2026.01.28 22:52:30 INFO  Shutting down server
+2026.01.28 22:52:30 INFO  Memory monitor stopped
+2026.01.28 22:52:30 INFO  shutting down Metals
+2026.01.28 22:52:30 INFO  Shut down connection with build server.
+2026.01.28 22:52:30 INFO  Shut down connection with build server.
+2026.01.28 22:52:30 INFO  Exiting server
+2026.01.29 23:00:53 INFO  Started: Metals version 1.6.5 in folders 'C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1' for client Visual Studio Code 1.108.2.
+2026.01.29 23:00:53 INFO  Memory monitor started
+2026.01.29 23:00:53 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026.01.29 23:00:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:00:57 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2
+ene 29, 2026 11:00:57 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+2026.01.29 23:00:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:58 INFO  Attempting to connect to the build server...
+2026.01.29 23:00:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:58 INFO  No running Bloop server found, starting one.
+2026.01.29 23:00:57 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:58 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11
+ene 29, 2026 11:00:58 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13
+2026.01.29 23:00:58 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:00:59 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6
+2026.01.29 23:00:58 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:58 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:00:59 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 18
+ene 29, 2026 11:00:59 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19
+2026.01.29 23:00:58 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:59 INFO  Starting compilation server
+2026.01.29 23:00:59 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:00:59 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21
+ene 29, 2026 11:00:59 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22
+2026.01.29 23:00:59 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:00:59 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\Main.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:01:01 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.29 23:01:02 INFO  Attempting to connect to the build server...
+2026.01.29 23:01:02 INFO  Found a Bloop server running
+2026.01.29 23:01:02 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.29 23:01:01 INFO  time: Connected to build server in 4.07s
+2026.01.29 23:01:02 INFO  Connected to Build server: Bloop v2.0.18
+2026.01.29 23:01:02 INFO  time: Imported build in 0.17s
+2026.01.29 23:01:02 WARN  3.3.3 is no longer supported in the current Metals versions, using the last known supported version 1.5.1
+2026.01.29 23:01:05 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+ene 29, 2026 11:01:05 P. M. org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+2026.01.29 23:01:07 INFO  time: indexed workspace in 5.33s
+ene 29, 2026 11:05:46 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 32
+2026.01.29 23:05:49 INFO  time: code lens generation in 1.31s
+2026.01.29 23:05:49 INFO  time: code lens generation in 2.89s
+2026.01.29 23:05:51 INFO  skipping build import with status 'Installed'
+2026.01.29 23:05:53 INFO  skipping build import with status 'Installed'
+2026.01.29 23:05:58 INFO  skipping build import with status 'Installed'
+2026.01.29 23:09:45 INFO  compiling root (1 scala source)
+2026.01.29 23:09:47 INFO  time: compiled root in 2.4s
+2026.01.29 23:10:38 INFO  compiling root (1 scala source)
+2026.01.29 23:10:41 INFO  time: compiled root in 3.06s
+2026.01.29 23:13:30 INFO  Shutting down server
+2026.01.29 23:13:30 INFO  Memory monitor stopped
+2026.01.29 23:13:30 INFO  shutting down Metals
+2026.01.29 23:13:30 INFO  Shut down connection with build server.
+2026.01.29 23:13:30 INFO  Shut down connection with build server.
+2026.01.29 23:13:30 INFO  Exiting server
+2026.01.29 23:13:52 INFO  Started: Metals version 1.6.5 in folders 'C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1' for client Visual Studio Code 1.108.2.
+2026.01.29 23:13:52 INFO  Memory monitor started
+2026.01.29 23:13:52 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026.01.29 23:13:52 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  Attempting to connect to the build server...
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11
+ene 29, 2026 11:13:54 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  Found a Bloop server running
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+ene 29, 2026 11:13:55 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 18
+ene 29, 2026 11:13:55 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:55 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.29 23:13:54 INFO  no build target found for C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\src\main\scala\data\ConexionDB.scala. Using presentation compiler with project's scala-library version: 3.3.7
+2026.01.29 23:13:55 INFO  Attempting to connect to the build server...
+2026.01.29 23:13:55 INFO  Found a Bloop server running
+2026.01.29 23:13:55 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Lenin\Desktop\Practicum-1.1\Practicum1.1\project\.metals\bsp.trace.json or C:\Users\Lenin\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2026.01.29 23:13:55 INFO  time: Connected to build server in 0.75s
+2026.01.29 23:13:55 INFO  Connected to Build server: Bloop v2.0.18
+2026.01.29 23:13:55 WARN  3.3.3 is no longer supported in the current Metals versions, using the last known supported version 1.5.1
+2026.01.29 23:13:59 INFO  Shutting down server
+2026.01.29 23:13:59 INFO  Memory monitor stopped
+2026.01.29 23:13:59 INFO  shutting down Metals
+2026.01.29 23:13:59 INFO  Shut down connection with build server.
+2026.01.29 23:13:59 INFO  Shut down connection with build server.
+2026.01.29 23:13:59 INFO  Exiting server
